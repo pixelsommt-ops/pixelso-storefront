@@ -1,0 +1,168 @@
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import useAuthStore from '../store/authStore';
+import useCartStore from '../store/cartStore';
+import useSiteSettingsStore from '../store/siteSettingsStore';
+import { waLink } from '../lib/business';
+import { trackPageview } from '../lib/analytics';
+import SearchBar from '../components/SearchBar';
+import SubNav from '../components/SubNav';
+import RichText from '../components/RichText';
+import { AddressIcon, InstagramIcon, TiktokIcon, YoutubeIcon, WhatsappIcon } from '../components/SocialIcons';
+
+export default function StorefrontLayout() {
+  const customer = useAuthStore((s) => s.customer);
+  const logout = useAuthStore((s) => s.logout);
+  const cartCount = useCartStore((s) => s.items.length);
+  const business = useSiteSettingsStore((s) => s.settings);
+  const fetchSettings = useSiteSettingsStore((s) => s.fetchSettings);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  // Judul tab browser ikut Nama Bisnis yang diatur di ERP ("Halaman Depan (Website)"),
+  // bukan hardcode - lihat store/siteSettingsStore.js. index.html cuma menyimpan fallback
+  // sebelum fetch ini selesai.
+  useEffect(() => {
+    if (business.name) {
+      document.title = business.tagline ? `${business.name} - ${business.tagline}` : business.name;
+    }
+  }, [business.name, business.tagline]);
+
+  // Tutup menu burger otomatis tiap pindah halaman (mis. lewat tombol back/forward browser).
+  useEffect(() => setMenuOpen(false), [location.pathname]);
+
+  // GA4 tidak mendeteksi navigasi client-side React Router sebagai pageview baru (bukan full
+  // page load) - lihat index.html (send_page_view: false), jadi dikirim manual di sini.
+  useEffect(() => {
+    trackPageview(location.pathname + location.search);
+  }, [location.pathname, location.search]);
+
+  const closeMenu = () => setMenuOpen(false);
+
+  return (
+    <div>
+      <header className="topbar">
+        <div className="container topbar-inner">
+          <NavLink to="/" className="brand">
+            <img src="/logo-pixelso-persegi.png" alt={business.name} className="brand-logo" />
+          </NavLink>
+          <SearchBar />
+          <button
+            type="button"
+            className="burger-btn"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Buka menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
+          <nav className={`nav-links ${menuOpen ? 'nav-links-open' : ''}`}>
+            <NavLink to="/katalog" onClick={closeMenu}>Katalog</NavLink>
+            <NavLink to="/kalkulator-papercut" onClick={closeMenu}>Kalkulator Papercut</NavLink>
+            {customer && <NavLink to="/pesanan" onClick={closeMenu}>Pesanan Saya</NavLink>}
+            <NavLink to="/keranjang" className="cart-badge" onClick={closeMenu}>
+              Keranjang
+              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+            </NavLink>
+            {customer ? (
+              <button type="button" className="btn btn-sm btn-secondary" onClick={() => { closeMenu(); logout(); }}>
+                Keluar ({customer.name.split(' ')[0]})
+              </button>
+            ) : (
+              <NavLink to="/login" className="btn btn-sm btn-primary nav-cta" onClick={closeMenu}>
+                Masuk
+              </NavLink>
+            )}
+          </nav>
+        </div>
+      </header>
+
+      <SubNav />
+
+      <main>
+        <Outlet />
+      </main>
+
+      <footer>
+        <div className="container">
+          <div className="footer-grid">
+            <div>
+              <h3 style={{ color: '#fff' }}>{business.name}</h3>
+              <RichText html={business.description} style={{ color: '#d9b9c1', maxWidth: 380 }} />
+              <p style={{ color: '#d9b9c1', display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
+                <AddressIcon style={{ flexShrink: 0, marginTop: '0.2rem' }} />
+                <span>{business.address}</span>
+              </p>
+            </div>
+            <div>
+              <h3 style={{ color: '#fff', fontSize: '1rem' }}>Kontak</h3>
+              {business.whatsapp && (
+                <p>
+                  <a
+                    href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal pemesanan.')}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    <WhatsappIcon /> {business.whatsapp}
+                  </a>
+                </p>
+              )}
+              {business.instagram && (
+                <p>
+                  <a
+                    href={`https://instagram.com/${business.instagram}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    <InstagramIcon /> @{business.instagram}
+                  </a>
+                </p>
+              )}
+              {business.tiktok && (
+                <p>
+                  <a
+                    href={`https://tiktok.com/@${business.tiktok}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    <TiktokIcon /> TikTok @{business.tiktok}
+                  </a>
+                </p>
+              )}
+              {business.youtube && (
+                <p>
+                  <a
+                    href={`https://youtube.com/@${business.youtube}/shorts`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    <YoutubeIcon /> YouTube Shorts @{business.youtube}
+                  </a>
+                </p>
+              )}
+              <p style={{ color: '#d9b9c1' }}>{business.openingHours}</p>
+            </div>
+            <div>
+              <h3 style={{ color: '#fff', fontSize: '1rem' }}>Belanja</h3>
+              <p><NavLink to="/katalog">Katalog Produk</NavLink></p>
+              <p><NavLink to="/kalkulator-papercut">Kalkulator Papercut</NavLink></p>
+              <p><NavLink to="/keranjang">Keranjang</NavLink></p>
+              {customer && <p><NavLink to="/pesanan">Pesanan Saya</NavLink></p>}
+            </div>
+          </div>
+          <p style={{ color: '#b98d97', fontSize: '0.8rem', margin: 0 }}>
+            &copy; {new Date().getFullYear()} {business.name}. Semua pesanan diproses lewat toko yang sama.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}

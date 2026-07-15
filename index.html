@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#430a19" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Pixelso Gemolong - Pesan Cetak Online</title>
+    <!-- Google Analytics (GA4). Measurement ID dari VITE_GA_MEASUREMENT_ID (lihat .env.example)
+         - send_page_view dimatikan karena pageview dikirim manual tiap ganti rute React Router,
+         lihat src/lib/analytics.js - kalau tidak, pageview kedua tidak akan tercatat sebab
+         GA hanya mendeteksi full page load, bukan navigasi client-side SPA. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_MEASUREMENT_ID%"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', '%VITE_GA_MEASUREMENT_ID%', { send_page_view: false });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
