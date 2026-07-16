@@ -26,7 +26,7 @@ export default function ProductCard({ product }) {
         </p>
       )}
       <p className="text-muted" style={{ fontSize: '0.82rem', margin: 0 }}>
-        {product.mode === 'area' ? 'Harga per m²' : 'Harga per pcs'}
+        Harga per {product.unitLabel || (product.mode === 'area' ? 'm²' : 'pcs')}
       </p>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <p className="price-tag" style={{ margin: 0 }}>Mulai {formatCurrency(product.baseRate)}</p>

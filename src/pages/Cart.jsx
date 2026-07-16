@@ -51,7 +51,7 @@ export default function Cart() {
             {priced.map(({ item, result }) => (
               <tr key={item.cartItemId}>
                 <td>{item.productName}{item.needDesign && <div className="badge badge-muted">+ Bantuan Desain</div>}</td>
-                <td>{item.mode === 'area' ? `${item.width}x${item.height}cm` : '-'} &times; {item.quantity} pcs</td>
+                <td>{item.mode === 'area' ? `${item.width}x${item.height}cm` : '-'} &times; {item.quantity} {item.unitLabel || 'pcs'}</td>
                 <td>{(result.selectedOptionsSnapshot || []).map((o) => o.choiceLabel).join(', ') || '-'}</td>
                 <td>{result.valid ? formatCurrency(result.total) : '-'}</td>
                 <td>

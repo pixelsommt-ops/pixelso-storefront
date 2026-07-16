@@ -109,7 +109,7 @@ export default function ProductDetail() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <span className="eyebrow" style={{ margin: 0 }}>
-              {product.mode === 'area' ? 'Harga per m²' : 'Harga per pcs'}
+              Harga per {product.unitLabel || (product.mode === 'area' ? 'm²' : 'pcs')}
             </span>
             {product.soldCount > 0 && <span className="badge badge-muted">{product.soldCount}+ terjual</span>}
           </div>

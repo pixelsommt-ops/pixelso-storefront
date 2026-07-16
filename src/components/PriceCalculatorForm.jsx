@@ -31,7 +31,7 @@ export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
     [catalog, form, selections, product.key]
   );
 
-  const isAreaMode = product.mode === 'area';
+  const isAreaMode = (product.calcType || product.mode) === 'area';
   const optionGroups = product.optionGroups || [];
 
   const handleSubmit = (e) => {
@@ -41,6 +41,7 @@ export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
       productKey: product.key,
       productName: product.name,
       mode: product.mode,
+      unitLabel: product.unitLabel,
       width: isAreaMode ? Number(form.width) : 0,
       height: isAreaMode ? Number(form.height) : 0,
       quantity: Number(form.quantity),
@@ -75,7 +76,10 @@ export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
         </div>
       )}
       <div className="field">
-        <label>Jumlah (pcs)</label>
+        {/* inputLabel dari Master Mode Harga cuma berlaku buat mode non-area (mis. "Durasi (menit)"
+            menggantikan field ini sepenuhnya) - mode area sudah punya Lebar/Tinggi sendiri di atas,
+            field ini di situ artinya "berapa banyak ukuran segini", jadi tetap label generik. */}
+        <label>{isAreaMode ? 'Jumlah (pcs)' : (product.inputLabel || 'Jumlah (pcs)')}</label>
         <input
           type="number" min="1" required
           value={form.quantity}

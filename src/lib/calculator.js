@@ -50,7 +50,10 @@ export function calculatePrintPrice(config, input) {
 
   let base = 0;
   let billedArea = 0;
-  if (product.mode === 'area') {
+  // calcType datang dari Master Mode Harga (backend pricingMode.service.js) - fallback ke
+  // perilaku lama (cek mode === 'area' langsung) kalau field belum ada.
+  const calcType = product.calcType || (product.mode === 'area' ? 'area' : 'scalar');
+  if (calcType === 'area') {
     const actualArea = (width / 100) * (height / 100);
     billedArea = Math.max(Math.max(0, number(product.minArea)), actualArea);
     base = billedArea * effectiveBaseRate * quantity + setup;

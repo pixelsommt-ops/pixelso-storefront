@@ -92,7 +92,7 @@ export default function Checkout() {
                   <span>{result.valid ? formatCurrency(result.total) : '-'}</span>
                 </div>
                 <p className="text-muted" style={{ fontSize: '0.8rem', margin: '4px 0' }}>
-                  {item.mode === 'area' ? `${item.width}x${item.height}cm, ` : ''}{item.quantity} pcs
+                  {item.mode === 'area' ? `${item.width}x${item.height}cm, ` : ''}{item.quantity} {item.unitLabel || 'pcs'}
                 </p>
                 <p className="text-muted" style={{ fontSize: '0.8rem', margin: '4px 0' }}>
                   Desain:{' '}
