@@ -10,6 +10,18 @@ export function stripHtml(html) {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+export const CATALOG_DESCRIPTION_MAX_LENGTH = 100;
+
+// Ringkasan teks polos untuk kartu katalog - dipotong pendek supaya kartu rapi/konsisten,
+// deskripsi lengkap (HTML) tetap tampil utuh di halaman detail produk (ProductDetail.jsx).
+export function truncateDescription(html, maxLength = CATALOG_DESCRIPTION_MAX_LENGTH) {
+  const plain = stripHtml(html);
+  if (plain.length <= maxLength) {
+    return { text: plain, isTruncated: false };
+  }
+  return { text: plain.slice(0, maxLength).trimEnd(), isTruncated: true };
+}
+
 export function formatDateTime(value) {
   if (!value) return '-';
   const date = new Date(value);

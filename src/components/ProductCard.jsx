@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
-import { formatCurrency, stripHtml } from '../lib/format';
+import { formatCurrency, truncateDescription } from '../lib/format';
 
 export default function ProductCard({ product }) {
+  const { text: descriptionPreview, isTruncated } = truncateDescription(product.description);
+
   return (
     <Link to={`/produk/${product.key}`} className="card product-card" style={{ textDecoration: 'none' }}>
       {product.imageUrl ? (
@@ -12,8 +14,16 @@ export default function ProductCard({ product }) {
         <div className="product-thumb">{product.name.charAt(0)}</div>
       )}
       <h3 style={{ fontSize: '1rem' }}>{product.name}</h3>
-      {product.description && (
-        <p className="text-muted" style={{ fontSize: '0.8rem', margin: 0 }}>{stripHtml(product.description)}</p>
+      {descriptionPreview && (
+        <p className="text-muted" style={{ fontSize: '0.8rem', margin: 0 }}>
+          {descriptionPreview}
+          {isTruncated && (
+            <>
+              {'... '}
+              <span style={{ color: 'var(--maroon-800)', fontWeight: 700 }}>Selengkapnya</span>
+            </>
+          )}
+        </p>
       )}
       <p className="text-muted" style={{ fontSize: '0.82rem', margin: 0 }}>
         {product.mode === 'area' ? 'Harga per m²' : 'Harga per pcs'}
