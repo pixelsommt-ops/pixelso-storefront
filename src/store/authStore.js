@@ -19,6 +19,13 @@ const useAuthStore = create((set) => ({
     set({ token: data.token, customer: data.customer });
   },
 
+  loginWithGoogle: async (idToken) => {
+    const { data } = await authService.googleLogin(idToken);
+    localStorage.setItem('storefront_token', data.token);
+    localStorage.setItem('storefront_customer', JSON.stringify(data.customer));
+    set({ token: data.token, customer: data.customer });
+  },
+
   logout: () => {
     localStorage.removeItem('storefront_token');
     localStorage.removeItem('storefront_customer');

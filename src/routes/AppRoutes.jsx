@@ -12,6 +12,8 @@ import ProductDetail from '../pages/ProductDetail';
 import Cart from '../pages/Cart';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 import Checkout from '../pages/Checkout';
 import Orders from '../pages/Orders';
 import OrderDetail from '../pages/OrderDetail';
@@ -30,6 +32,8 @@ export default function AppRoutes() {
         <Route path="/keranjang" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/daftar" element={<Register />} />
+        <Route path="/lupa-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/checkout" element={<Checkout />} />
