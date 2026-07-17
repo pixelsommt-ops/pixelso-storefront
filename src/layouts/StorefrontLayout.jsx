@@ -48,7 +48,7 @@ export default function StorefrontLayout() {
       <header className="topbar">
         <div className="container topbar-inner">
           <NavLink to="/" className="brand">
-            <img src="/logo-pixelso-persegi.png" alt={business.name} className="brand-logo" />
+            <img src={business.logoUrl || '/logo-pixelso-persegi.png'} alt={business.name} className="brand-logo" />
           </NavLink>
           <SearchBar />
           <button
