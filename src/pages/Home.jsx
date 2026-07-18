@@ -7,10 +7,12 @@ import CaraPesanSteps from '../components/CaraPesanSteps';
 import HeroCarousel from '../components/HeroCarousel';
 import RichText from '../components/RichText';
 import useSiteSettingsStore from '../store/siteSettingsStore';
+import useAuthStore from '../store/authStore';
 
 export default function Home() {
   const [catalog, setCatalog] = useState(null);
   const business = useSiteSettingsStore((s) => s.settings);
+  const customer = useAuthStore((s) => s.customer);
 
   useEffect(() => {
     catalogService.getCatalog().then(({ data }) => setCatalog(data));
@@ -26,7 +28,7 @@ export default function Home() {
             <RichText html={business.description} className="text-muted" style={{ fontSize: '1rem', maxWidth: 480 }} />
             <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
               <Link to="/katalog" className="btn btn-primary">Lihat Katalog</Link>
-              <Link to="/login" className="btn btn-secondary">Login</Link>
+              {!customer && <Link to="/login" className="btn btn-secondary">Login</Link>}
             </div>
           </div>
           {business.heroSlides?.length > 0 ? (
