@@ -163,6 +163,18 @@ export default function StorefrontLayout() {
           </p>
         </div>
       </footer>
+
+      {business.whatsapp && (
+        <a
+          href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal pemesanan.')}
+          target="_blank"
+          rel="noreferrer"
+          className="wa-float-btn"
+          aria-label="Chat WhatsApp"
+        >
+          <WhatsappIcon />
+        </a>
+      )}
     </div>
   );
 }

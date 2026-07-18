@@ -710,6 +710,45 @@ footer {
   margin-top: 40px;
 }
 
+.wa-float-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: transform 0.15s ease;
+}
+
+.wa-float-btn:hover {
+  transform: scale(1.08);
+}
+
+.wa-float-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+}
+
+@media (max-width: 480px) {
+  .wa-float-btn {
+    right: 14px;
+    bottom: 14px;
+    width: 50px;
+    height: 50px;
+  }
+  .wa-float-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
 footer a {
   color: #f4e4e8;
   text-decoration: none;
