@@ -36,7 +36,7 @@ export default function SubNav() {
   return (
     <nav className="sub-nav">
       <div className="container sub-nav-inner">
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', flexShrink: 0 }}>
           <button
             type="button"
             className="category-menu-btn"
@@ -62,11 +62,16 @@ export default function SubNav() {
           )}
         </div>
 
-        <NavLink to="/" className="sub-nav-link" onClick={closeCategory}>Beranda</NavLink>
-        <NavLink to="/katalog" className="sub-nav-link" onClick={closeCategory}>Semua Produk</NavLink>
-        <NavLink to="/promo" className="sub-nav-link" onClick={closeCategory}>Promo</NavLink>
-        <NavLink to="/jam-layanan" className="sub-nav-link" onClick={closeCategory}>Jam Layanan</NavLink>
-        <NavLink to="/tentang-kami" className="sub-nav-link" onClick={closeCategory}>Tentang Kami</NavLink>
+        {/* Wrapper terpisah supaya scroll horizontal di mobile (lihat .sub-nav-scroll)
+            tidak ikut meng-clip dropdown kategori di atas - overflow-x:auto pada satu
+            axis otomatis meng-clip axis lainnya juga kalau dipasang di kontainer yang sama. */}
+        <div className="sub-nav-scroll">
+          <NavLink to="/" className="sub-nav-link" onClick={closeCategory}>Beranda</NavLink>
+          <NavLink to="/katalog" className="sub-nav-link" onClick={closeCategory}>Semua Produk</NavLink>
+          <NavLink to="/promo" className="sub-nav-link" onClick={closeCategory}>Promo</NavLink>
+          <NavLink to="/jam-layanan" className="sub-nav-link" onClick={closeCategory}>Jam Layanan</NavLink>
+          <NavLink to="/tentang-kami" className="sub-nav-link" onClick={closeCategory}>Tentang Kami</NavLink>
+        </div>
 
         {business.whatsapp && (
           <a

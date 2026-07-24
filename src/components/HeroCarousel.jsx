@@ -24,7 +24,7 @@ export default function HeroCarousel({ slides, altText }) {
   if (slides.length === 0) return null;
 
   return (
-    <div style={{ position: 'relative', width: '100%', maxHeight: 340, aspectRatio: '16 / 10', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
+    <div className="hero-carousel">
       {slides.map((slide, index) => {
         const img = (
           <img

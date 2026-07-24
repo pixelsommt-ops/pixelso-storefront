@@ -8,6 +8,7 @@ import HeroCarousel from '../components/HeroCarousel';
 import RichText from '../components/RichText';
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import useAuthStore from '../store/authStore';
+import useInfiniteReveal from '../hooks/useInfiniteReveal';
 
 export default function Home() {
   const [catalog, setCatalog] = useState(null);
@@ -18,11 +19,15 @@ export default function Home() {
     catalogService.getCatalog().then(({ data }) => setCatalog(data));
   }, []);
 
+  const activeProducts = (catalog?.products || []).filter((p) => p.active);
+  const { visibleCount, sentinelRef } = useInfiniteReveal(activeProducts.length, 10);
+  const visibleProducts = activeProducts.slice(0, visibleCount);
+
   return (
     <div>
       <section className="hero">
         <div className="container hero-inner">
-          <div>
+          <div className="hero-copy">
             <span className="eyebrow">{business.tagline}</span>
             <h1 style={{ fontSize: '2.4rem' }}>Pesan Cetak Online, Prosesnya Cepat &amp; Transparan</h1>
             <RichText html={business.description} className="text-muted" style={{ fontSize: '1rem', maxWidth: 480 }} />
@@ -34,7 +39,7 @@ export default function Home() {
           {business.heroSlides?.length > 0 ? (
             <HeroCarousel slides={business.heroSlides} altText={business.name} />
           ) : (
-            <div className="card" style={{ textAlign: 'center' }}>
+            <div className="card hero-fallback-card">
               <p className="text-muted" style={{ margin: 0 }}>{business.address}</p>
               <p style={{ fontWeight: 800, color: 'var(--maroon-800)', margin: '8px 0' }}>{business.openingHours}</p>
             </div>
@@ -42,24 +47,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section container">
+      <section className="section container home-secondary">
         <ValuePropTiles />
       </section>
 
       <section className="section container">
         <div className="section-head">
           <h2>Produk Populer</h2>
-          <p className="text-muted">Estimasi harga otomatis sesuai ukuran, bahan, dan finishing pilihan Anda.</p>
+          <p className="text-muted section-head-desc">Estimasi harga otomatis sesuai ukuran, bahan, dan finishing pilihan Anda.</p>
         </div>
-        <div className="grid grid-4">
-          {(catalog?.products || []).filter((p) => p.active).map((p) => (
+        <div className="grid grid-4 product-grid">
+          {visibleProducts.map((p) => (
             <ProductCard key={p.key} product={p} />
           ))}
         </div>
+        <div ref={sentinelRef} />
       </section>
 
       {business.galleryImages?.length > 0 && (
-        <section className="section container">
+        <section className="section container home-secondary">
           <div className="section-head">
             <h2>Galeri</h2>
             <p className="text-muted">Sebagian hasil kerja dan suasana produksi kami.</p>
@@ -79,7 +85,7 @@ export default function Home() {
         </section>
       )}
 
-      <section className="section container">
+      <section className="section container home-secondary">
         <div className="section-head">
           <h2>Cara Pesan</h2>
         </div>

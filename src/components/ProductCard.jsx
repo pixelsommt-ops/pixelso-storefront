@@ -14,20 +14,22 @@ export default function ProductCard({ product }) {
         <div className="product-thumb">{product.name.charAt(0)}</div>
       )}
       <h3 style={{ fontSize: '1rem' }}>{product.name}</h3>
-      {descriptionPreview && (
-        <p className="text-muted" style={{ fontSize: '0.8rem', margin: 0 }}>
-          {descriptionPreview}
-          {isTruncated && (
-            <>
-              {'... '}
-              <span style={{ color: 'var(--maroon-800)', fontWeight: 700 }}>Selengkapnya</span>
-            </>
-          )}
+      <div className="product-card-detail">
+        {descriptionPreview && (
+          <p className="text-muted" style={{ fontSize: '0.8rem', margin: 0 }}>
+            {descriptionPreview}
+            {isTruncated && (
+              <>
+                {'... '}
+                <span style={{ color: 'var(--maroon-800)', fontWeight: 700 }}>Selengkapnya</span>
+              </>
+            )}
+          </p>
+        )}
+        <p className="text-muted" style={{ fontSize: '0.82rem', margin: 0 }}>
+          Harga per {product.unitLabel || (product.mode === 'area' ? 'm²' : 'pcs')}
         </p>
-      )}
-      <p className="text-muted" style={{ fontSize: '0.82rem', margin: 0 }}>
-        Harga per {product.unitLabel || (product.mode === 'area' ? 'm²' : 'pcs')}
-      </p>
+      </div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <p className="price-tag" style={{ margin: 0 }}>Mulai {formatCurrency(product.baseRate)}</p>
         {product.soldCount > 0 && (

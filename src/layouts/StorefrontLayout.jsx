@@ -8,6 +8,8 @@ import { trackPageview } from '../lib/analytics';
 import SearchBar from '../components/SearchBar';
 import SubNav from '../components/SubNav';
 import RichText from '../components/RichText';
+import MobileBottomNav from '../components/MobileBottomNav';
+import { CartIcon } from '../components/BottomNavIcons';
 import { AddressIcon, InstagramIcon, TiktokIcon, YoutubeIcon, WhatsappIcon } from '../components/SocialIcons';
 
 export default function StorefrontLayout() {
@@ -51,6 +53,10 @@ export default function StorefrontLayout() {
             <img src={business.logoUrl || '/logo-pixelso-persegi.png'} alt={business.name} className="brand-logo" />
           </NavLink>
           <SearchBar />
+          <NavLink to="/keranjang" className="mobile-cart-btn cart-badge" aria-label="Keranjang">
+            <CartIcon />
+            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+          </NavLink>
           <button
             type="button"
             className="burger-btn"
@@ -175,6 +181,8 @@ export default function StorefrontLayout() {
           <WhatsappIcon />
         </a>
       )}
+
+      <MobileBottomNav />
     </div>
   );
 }

@@ -142,9 +142,9 @@ a {
   margin-left: auto;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 767px) {
   .search-bar {
-    flex-basis: 100%;
+    flex: 1 1 auto;
     max-width: none;
   }
 }
@@ -218,6 +218,10 @@ a {
   gap: 20px;
   flex-wrap: wrap;
   padding: 10px 0;
+}
+
+.sub-nav-scroll {
+  display: contents;
 }
 
 .sub-nav-link {
@@ -362,51 +366,22 @@ a {
   }
 }
 
-@media (max-width: 620px) {
-  .grid-2,
-  .grid-3,
-  .grid-4 {
-    grid-template-columns: 1fr;
-  }
-  .burger-btn {
-    display: flex;
-  }
-  .nav-links {
-    display: none;
-  }
-  .nav-links.nav-links-open {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    padding: 14px 20px 18px;
-    box-shadow: var(--shadow-sm);
-    margin-left: 0;
-  }
-  .nav-links.nav-links-open a {
-    padding: 8px 4px;
-  }
-  .sub-nav-inner {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 16px;
-  }
-  .sub-nav-help {
-    margin-left: 0;
-  }
-  .category-dropdown {
-    left: 0;
-    right: 0;
-    min-width: 0;
-    max-width: none;
-    grid-template-columns: 1fr;
-  }
+.mobile-cart-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--maroon-800);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.bottom-nav {
+  display: none;
 }
 
 label {
@@ -500,6 +475,20 @@ textarea:focus {
   .hero-inner {
     grid-template-columns: 1fr;
   }
+}
+
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  max-height: 340px;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-fallback-card {
+  text-align: center;
 }
 
 .eyebrow {
@@ -764,5 +753,386 @@ footer a {
 @media (max-width: 700px) {
   .footer-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.bottom-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 2px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+.bottom-nav-link svg {
+  width: 22px;
+  height: 22px;
+}
+
+.bottom-nav-link.active {
+  color: var(--maroon-800);
+}
+
+.kategori-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.kategori-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  text-align: center;
+  color: var(--ink);
+  padding: 14px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.kategori-tile-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--red-100);
+  color: var(--maroon-700);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  overflow: hidden;
+}
+
+.kategori-tile-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kategori-tile span {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.profil-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--red-500), var(--maroon-700));
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.profil-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.profil-row:last-child {
+  border-bottom: none;
+}
+
+.order-kanban-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.order-kanban-column {
+  flex: 1 1 220px;
+  min-width: 200px;
+  max-width: 300px;
+  background: var(--rose-50);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  max-height: 65vh;
+  overflow: hidden;
+}
+
+.order-kanban-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  background: var(--maroon-950);
+  color: var(--white);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.order-kanban-column-count {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 0.72rem;
+}
+
+.order-kanban-column-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.order-kanban-column-empty {
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.order-kanban-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.order-kanban-card:hover {
+  border-color: var(--red-500);
+}
+
+.order-kanban-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.order-kanban-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* ===== Mobile marketplace layout (phones, <=767px) =====
+   Deliberately placed at the very end of the file: every property here overrides an
+   equal-specificity rule declared earlier (e.g. base ".hero", ".product-card", ".wa-float-btn"
+   at various points above) - CSS cascade resolves same-specificity conflicts by source order,
+   NOT by whether the winning rule sits inside a @media block, so an override placed *before*
+   its base rule loses even when its media condition matches. Keep every mobile override in
+   THIS block, appended after everything else, so this class of bug can't recur. */
+@media (max-width: 767px) {
+  /* Top chrome: user already knows they're on cetakpixelso.com, no logo needed - drop it
+     plus the desktop nav/burger/sub-nav, keep just search + cart side by side on one row. */
+  .brand,
+  .burger-btn,
+  .nav-links,
+  .sub-nav {
+    display: none !important;
+  }
+
+  /* Longhand on purpose everywhere below - ".topbar-inner"/".section" combine with
+     ".container" on the very same element throughout this app (e.g. className="container
+     topbar-inner", className="section container"). A shorthand "padding: Xpx 0" sets ALL
+     four sides, so it silently zeroed out whichever side ".container" was responsible for
+     instead of combining with it - the actual cause of pages looking edge-to-edge on phones. */
+  .topbar-inner {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .search-bar {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+
+  .mobile-cart-btn {
+    display: inline-flex;
+  }
+
+  body {
+    padding-bottom: calc(58px + env(safe-area-inset-bottom));
+    font-size: 0.92rem;
+  }
+
+  .container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  /* Bottom tab bar */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    background: #fff;
+    border-top: 1px solid var(--line);
+    padding: 6px 2px calc(6px + env(safe-area-inset-bottom));
+    box-shadow: 0 -6px 20px rgba(67, 10, 25, 0.1);
+  }
+
+  .bottom-nav-link {
+    font-weight: 500;
+    font-size: 0.62rem;
+  }
+
+  /* Bottom-nav's real rendered height varies with the safe-area inset (gesture-nav phones
+     add extra there, e.g. Galaxy S25), so the floating WA button's clearance above it has
+     to account for that inset too, not a flat px guess - otherwise it sits on "Kalkulator". */
+  .wa-float-btn {
+    bottom: calc(58px + env(safe-area-inset-bottom) + 16px);
+  }
+
+  /* .grid-2/3/4 are also used by plain 2-column FORMS (ProductDetail photo+info and
+     calculator+upload, PapercutCalculator, Checkout, PriceCalculatorForm) - those must
+     stack to one column on a phone, not be forced into 2-up. Only actual product/promo
+     tile listings opt into the dense 2-up look via the separate .product-grid class. */
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  /* Longhand for the same reason as .topbar-inner above - shares an element with .container. */
+  .section {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .section-head {
+    margin-bottom: 8px;
+  }
+
+  .section-head-desc {
+    display: none;
+  }
+
+  .product-card {
+    padding: 10px;
+    gap: 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .product-thumb {
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .product-card-detail {
+    display: none;
+  }
+
+  /* Home: cut the desktop hero copy + secondary sections, product grid leads straight
+     after a plain (non-rounded, no shadow) hero banner with minimal gap around it. */
+  .hero {
+    padding: 0;
+  }
+
+  .hero-inner {
+    gap: 0;
+  }
+
+  .hero-copy {
+    display: none;
+  }
+
+  .hero-carousel,
+  .hero-fallback-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .home-secondary {
+    display: none;
+  }
+
+  /* Footer: bottom tab bar already covers every link it had (Beranda/Katalog/Kalkulator/
+     Pesanan Saya), so the whole maroon block is just dead weight on mobile - drop it. */
+  footer {
+    display: none;
+  }
+
+  .kategori-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .kategori-tile span {
+    font-weight: 500;
+    font-size: 0.72rem;
+  }
+
+  /* Every font on mobile: smaller and regular weight, nothing bold - the "banyak kata-kata,
+     tebal-tebal" ERP-admin-tool feel doesn't fit a browse-and-buy screen. */
+  h1,
+  h2,
+  h3 {
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+  }
+
+  h3 {
+    font-size: 0.82rem;
+    font-weight: 400;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .btn {
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+
+  .price-tag {
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+
+  .badge {
+    font-weight: 500;
+  }
+
+  label {
+    font-weight: 500;
   }
 }

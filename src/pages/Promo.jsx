@@ -22,7 +22,7 @@ export default function Promo() {
       {error && <div className="alert alert-error">{error}</div>}
       {!promos && !error && <p className="text-muted">Memuat promo...</p>}
       {promos && promos.length === 0 && <p className="text-muted">Belum ada promo aktif saat ini. Pantau terus ya!</p>}
-      <div className="grid grid-4">
+      <div className="grid grid-4 product-grid">
         {promos?.map((promo) => (
           <div key={promo.id} className="card product-card">
             {promo.imageUrl ? (

@@ -5,6 +5,8 @@ import ProtectedRoute from './ProtectedRoute';
 import Home from '../pages/Home';
 import PapercutCalculator from '../pages/PapercutCalculator';
 import Catalog from '../pages/Catalog';
+import Kategori from '../pages/Kategori';
+import Profil from '../pages/Profil';
 import Promo from '../pages/Promo';
 import JamLayanan from '../pages/JamLayanan';
 import TentangKami from '../pages/TentangKami';
@@ -24,6 +26,8 @@ export default function AppRoutes() {
       <Route element={<StorefrontLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/katalog" element={<Catalog />} />
+        <Route path="/kategori" element={<Kategori />} />
+        <Route path="/profil" element={<Profil />} />
         <Route path="/promo" element={<Promo />} />
         <Route path="/jam-layanan" element={<JamLayanan />} />
         <Route path="/tentang-kami" element={<TentangKami />} />
