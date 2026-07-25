@@ -27,6 +27,12 @@ export default function Checkout() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Program Ulasan Google Maps: kode voucher opsional dari klaim ulasan yang sudah disetujui.
+  const [voucherCode, setVoucherCode] = useState('');
+  const [voucherResult, setVoucherResult] = useState(null);
+  const [voucherError, setVoucherError] = useState('');
+  const [checkingVoucher, setCheckingVoucher] = useState(false);
+
   useEffect(() => {
     catalogService.getCatalog().then(({ data }) => setCatalog(data));
   }, []);
@@ -42,6 +48,31 @@ export default function Checkout() {
 
   const total = priced.reduce((sum, { result }) => sum + (result.valid ? result.total : 0), 0);
 
+  // Reset voucher yang sudah diterapkan kalau total berubah (mis. catalog baru selesai dimuat)
+  // supaya diskon yang ditampilkan tidak stale terhadap subtotal terbaru.
+  useEffect(() => {
+    setVoucherResult(null);
+    setVoucherError('');
+  }, [total]);
+
+  const discountAmount = voucherResult?.discountAmount || 0;
+  const finalTotal = total - discountAmount;
+
+  const handleApplyVoucher = async () => {
+    if (!voucherCode.trim()) return;
+    setVoucherError('');
+    setCheckingVoucher(true);
+    try {
+      const { data } = await checkoutService.validateVoucher({ code: voucherCode.trim(), subtotal: total });
+      setVoucherResult(data);
+    } catch (err) {
+      setVoucherResult(null);
+      setVoucherError(err?.response?.data?.message || 'Kode voucher tidak valid');
+    } finally {
+      setCheckingVoucher(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -51,6 +82,8 @@ export default function Checkout() {
     }
     setSubmitting(true);
     try {
+      // Backend tetap sumber kebenaran (validasi ulang & hitung ulang diskon di dalam transaksi
+      // checkout) - voucherResult di sini cuma dipakai buat preview UI sebelum submit.
       const { data } = await checkoutService.checkout({
         items: items.map((item) => ({
           productKey: item.productKey,
@@ -66,6 +99,7 @@ export default function Checkout() {
         paymentMethod,
         paymentProofUrl,
         notes,
+        voucherCode: voucherResult ? voucherCode.trim().toUpperCase() : undefined,
       });
       clearCart();
       navigate(`/pesanan/${data.poId}`);
@@ -122,9 +156,50 @@ export default function Checkout() {
           <div className="card">
             <h3>Pembayaran</h3>
             <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-              Transfer sejumlah <strong>{formatCurrency(total)}</strong> lalu upload bukti transfer di bawah ini.
+              Transfer sejumlah <strong>{formatCurrency(finalTotal)}</strong> lalu upload bukti transfer di bawah ini.
               Tim kami akan verifikasi manual.
             </p>
+
+            <div className="field">
+              <label>Kode Voucher (opsional)</label>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  type="text"
+                  value={voucherCode}
+                  onChange={(e) => {
+                    setVoucherCode(e.target.value.toUpperCase());
+                    setVoucherResult(null);
+                    setVoucherError('');
+                  }}
+                  placeholder="Mis. RV-XXXXXXXX"
+                  style={{ flex: 1 }}
+                />
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={handleApplyVoucher}
+                  disabled={checkingVoucher || !voucherCode.trim()}
+                >
+                  {checkingVoucher ? 'Mengecek...' : 'Terapkan'}
+                </button>
+              </div>
+              {voucherError && (
+                <div className="alert alert-error" style={{ marginTop: 8 }}>{voucherError}</div>
+              )}
+              {voucherResult && (
+                <div style={{ marginTop: 8, fontSize: '0.85rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--success)' }}>
+                    <span>Diskon Voucher ({voucherResult.discountPercent}%)</span>
+                    <span>-{formatCurrency(discountAmount)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 900 }}>
+                    <span>Total Bayar</span>
+                    <span>{formatCurrency(finalTotal)}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="field">
               <label>Metode Pembayaran</label>
               <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
