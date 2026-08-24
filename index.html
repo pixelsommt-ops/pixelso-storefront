@@ -7,6 +7,15 @@
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Pixelso Gemolong - Pesan Cetak Online</title>
+    <!-- Font khusus variant "ecommerce" A/B test beranda (Exo 2 = display/judul, Work Sans =
+         teks) - lihat .ecommerce-home di index.css. Dipasang di sini (bukan di HomeEcommerce.jsx)
+         supaya font sudah siap sebelum React render, menghindari flash pergantian font. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800;900&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <!-- Google Analytics (GA4). Measurement ID dari VITE_GA_MEASUREMENT_ID (lihat .env.example)
          - send_page_view dimatikan karena pageview dikirim manual tiap ganti rute React Router,
          lihat src/lib/analytics.js - kalau tidak, pageview kedua tidak akan tercatat sebab
@@ -17,6 +26,48 @@
       function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', '%VITE_GA_MEASUREMENT_ID%', { send_page_view: false });
+      // Google Ads conversion tag (Fase 1.A "Unified Conversion Tracking") - pakai gtag.js yang
+      // sama dengan GA4 di atas (multi-tag, cukup satu script loader), tapi hanya di-config kalau
+      // VITE_GOOGLE_ADS_CONVERSION_ID sudah diisi (lihat .env.example). Dua kondisi dicek: var
+      // yang truthy (bukan '', belum diisi di .env) DAN tidak mengandung '%' (Vite tidak
+      // mengganti %VAR% yang tidak terdefinisi sama sekali di .env, placeholder-nya tetap literal).
+      var GOOGLE_ADS_ID = '%VITE_GOOGLE_ADS_CONVERSION_ID%';
+      if (GOOGLE_ADS_ID && GOOGLE_ADS_ID.indexOf('%') === -1) {
+        gtag('config', GOOGLE_ADS_ID);
+      }
+    </script>
+    <!-- Meta (Facebook/Instagram) Pixel - Fase 1.A. Aktif hanya kalau VITE_META_PIXEL_ID sudah
+         diisi (lihat .env.example, ID didapat dari Facebook Ads Manager > Events Manager). Base
+         code standar Meta (tanpa noscript fallback - <noscript><img></noscript> di <head> tidak
+         valid HTML5 dan bikin Vite gagal parse; JS-disabled browser sudah sangat jarang, dan
+         GA4 di atas juga tidak punya fallback ini). -->
+    <script>
+      var META_PIXEL_ID = '%VITE_META_PIXEL_ID%';
+      if (META_PIXEL_ID && META_PIXEL_ID.indexOf('%') === -1) {
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', META_PIXEL_ID);
+        fbq('track', 'PageView');
+      }
+    </script>
+    <!-- TikTok Pixel - Fase 1.A. Aktif hanya kalau VITE_TIKTOK_PIXEL_ID sudah diisi (lihat
+         .env.example, ID didapat dari TikTok Ads Manager > Assets > Event). Base code standar
+         TikTok (ttq loader). -->
+    <script>
+      var TIKTOK_PIXEL_ID = '%VITE_TIKTOK_PIXEL_ID%';
+      if (TIKTOK_PIXEL_ID && TIKTOK_PIXEL_ID.indexOf('%') === -1) {
+        !function (w, d, t) {
+          w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<e.length;n++)ttq.setAndDefer(e,e.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=i+"?sdkid="+e+"&lib="+t;var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(a,s)};
+          ttq.load(TIKTOK_PIXEL_ID);
+          ttq.page();
+        }(window, document, 'ttq');
+      }
     </script>
     <!-- Google Identity Services - dipakai tombol "Masuk dengan Google" di Login/Register,
          lihat src/components/GoogleLoginButton.jsx -->

@@ -11,6 +11,15 @@ export function HomeIcon(props) {
   );
 }
 
+export function BlogIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="4.5" y="3.5" width="15" height="17" rx="1.5" />
+      <path d="M8 8h8M8 12h8M8 16h5" />
+    </svg>
+  );
+}
+
 export function PromoIcon(props) {
   return (
     <svg {...base} {...props}>

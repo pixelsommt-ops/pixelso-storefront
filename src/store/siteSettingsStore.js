@@ -40,12 +40,16 @@ const useSiteSettingsStore = create((set, get) => ({
     try {
       const { data } = await settingsService.getSettings();
       const { activeTheme, ...rest } = data;
-      // heroSlides tema (kalau diisi) menggantikan heroSlides normal selama tema itu aktif -
-      // logoUrl tema dipakai StorefrontLayout kalau ada, fallback ke logo default kalau tidak.
+      // heroSlides/heroEyebrow/heroHeadline tema (kalau diisi) menggantikan versi normal selama
+      // tema itu aktif - logoUrl tema dipakai StorefrontLayout kalau ada, fallback ke logo
+      // default kalau tidak. Field yang tidak diisi di tema tetap pakai nilai normal (null di
+      // theme = tidak override, lihat theme.service.js backend).
       const merged = {
         ...DEFAULT_BUSINESS,
         ...rest,
         heroSlides: activeTheme?.heroSlides?.length > 0 ? activeTheme.heroSlides : rest.heroSlides,
+        heroEyebrow: activeTheme?.heroEyebrow || null,
+        heroHeadline: activeTheme?.heroHeadline || null,
         logoUrl: activeTheme?.logoUrl || null,
       };
       applyTheme(activeTheme);

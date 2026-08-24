@@ -107,14 +107,14 @@ export default function PapercutCalculator() {
                 gridTemplateColumns: `repeat(${result.best.cols}, 1fr)`,
                 gap: 3,
                 border: '1px solid var(--line)',
-                borderRadius: 8,
+                borderRadius: 3,
                 padding: 8,
                 maxWidth: 260,
               }}
               aria-label="Pratinjau susunan potongan"
             >
               {Array.from({ length: previewCells }).map((_, i) => (
-                <div key={i} style={{ background: 'var(--red-500)', opacity: 0.75, aspectRatio: '1 / 1', borderRadius: 2 }} />
+                <div key={i} style={{ background: 'var(--red-500)', opacity: 0.75, aspectRatio: '1 / 1', borderRadius: 3 }} />
               ))}
             </div>
           ) : (

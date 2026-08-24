@@ -47,6 +47,7 @@ export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
       quantity: Number(form.quantity),
       selections,
       needDesign: form.needDesign,
+      estimatedTotal: result.valid ? result.total : 0,
     });
     setForm(EMPTY_FORM);
     setSelections(buildDefaultSelections(product));

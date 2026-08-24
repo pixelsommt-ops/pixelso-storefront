@@ -54,9 +54,12 @@ export function calculatePrintPrice(config, input) {
   // perilaku lama (cek mode === 'area' langsung) kalau field belum ada.
   const calcType = product.calcType || (product.mode === 'area' ? 'area' : 'scalar');
   if (calcType === 'area') {
+    // Luas minimum di-floor ke TOTAL order (actualArea x quantity), BUKAN per pcs - bug nyata
+    // 2026-08-14, lihat storefront.calculator.js (backend, formula identik) untuk detail lengkap.
     const actualArea = (width / 100) * (height / 100);
-    billedArea = Math.max(Math.max(0, number(product.minArea)), actualArea);
-    base = billedArea * effectiveBaseRate * quantity + setup;
+    const totalArea = actualArea * quantity;
+    billedArea = Math.max(Math.max(0, number(product.minArea)), totalArea);
+    base = billedArea * effectiveBaseRate + setup;
   } else {
     base = effectiveBaseRate * quantity + setup;
   }

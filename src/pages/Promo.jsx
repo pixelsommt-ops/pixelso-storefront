@@ -29,16 +29,18 @@ export default function Promo() {
               <img
                 src={promo.imageUrl}
                 alt={promo.title}
-                style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 'var(--radius-md)' }}
+                style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: '3px', display: 'block' }}
               />
             ) : (
               <div className="product-thumb" />
             )}
-            <h3 style={{ marginTop: '0.75rem' }}>{promo.title}</h3>
-            {promo.description && <p className="text-muted">{promo.description}</p>}
-            {promo.endDate && (
-              <span className="badge badge-muted">Berlaku s/d {formatDate(promo.endDate)}</span>
-            )}
+            <div className="product-card-body">
+              <h3 style={{ marginTop: 0 }}>{promo.title}</h3>
+              {promo.description && <p className="text-muted">{promo.description}</p>}
+              {promo.endDate && (
+                <span className="badge badge-muted">Berlaku s/d {formatDate(promo.endDate)}</span>
+              )}
+            </div>
           </div>
         ))}
       </div>

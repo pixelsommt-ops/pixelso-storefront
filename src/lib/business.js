@@ -13,7 +13,11 @@ export const DEFAULT_BUSINESS = {
   tiktok: 'kreasi.umkm.solo',
   youtube: '',
   facebook: '',
+  shopee: '',
+  googleMapsUrl: '',
   heroSlides: [],
+  heroEyebrow: null,
+  heroHeadline: null,
   galleryImages: [],
 };
 

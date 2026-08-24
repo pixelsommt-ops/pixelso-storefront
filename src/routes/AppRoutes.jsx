@@ -10,6 +10,8 @@ import Profil from '../pages/Profil';
 import Promo from '../pages/Promo';
 import JamLayanan from '../pages/JamLayanan';
 import TentangKami from '../pages/TentangKami';
+import Blog from '../pages/Blog';
+import BlogDetail from '../pages/BlogDetail';
 import ProductDetail from '../pages/ProductDetail';
 import Cart from '../pages/Cart';
 import Login from '../pages/Login';
@@ -31,6 +33,8 @@ export default function AppRoutes() {
         <Route path="/promo" element={<Promo />} />
         <Route path="/jam-layanan" element={<JamLayanan />} />
         <Route path="/tentang-kami" element={<TentangKami />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/kalkulator-papercut" element={<PapercutCalculator />} />
         <Route path="/produk/:productKey" element={<ProductDetail />} />
         <Route path="/keranjang" element={<Cart />} />

@@ -4,13 +4,13 @@ import useAuthStore from '../store/authStore';
 import useCartStore from '../store/cartStore';
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import { waLink } from '../lib/business';
-import { trackPageview } from '../lib/analytics';
+import { trackPageview, trackContact, captureUtmFromUrl } from '../lib/analytics';
 import SearchBar from '../components/SearchBar';
 import SubNav from '../components/SubNav';
 import RichText from '../components/RichText';
 import MobileBottomNav from '../components/MobileBottomNav';
 import { CartIcon } from '../components/BottomNavIcons';
-import { AddressIcon, InstagramIcon, TiktokIcon, YoutubeIcon, WhatsappIcon } from '../components/SocialIcons';
+import { AddressIcon, InstagramIcon, TiktokIcon, YoutubeIcon, WhatsappIcon, ShopeeIcon } from '../components/SocialIcons';
 
 export default function StorefrontLayout() {
   const customer = useAuthStore((s) => s.customer);
@@ -40,6 +40,7 @@ export default function StorefrontLayout() {
   // GA4 tidak mendeteksi navigasi client-side React Router sebagai pageview baru (bukan full
   // page load) - lihat index.html (send_page_view: false), jadi dikirim manual di sini.
   useEffect(() => {
+    captureUtmFromUrl(location.search);
     trackPageview(location.pathname + location.search);
   }, [location.pathname, location.search]);
 
@@ -113,6 +114,7 @@ export default function StorefrontLayout() {
                     target="_blank"
                     rel="noreferrer"
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                    onClick={() => trackContact('footer')}
                   >
                     <WhatsappIcon /> {business.whatsapp}
                   </a>
@@ -170,17 +172,64 @@ export default function StorefrontLayout() {
         </div>
       </footer>
 
-      {business.whatsapp && (
-        <a
-          href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal pemesanan.')}
-          target="_blank"
-          rel="noreferrer"
-          className="wa-float-btn"
-          aria-label="Chat WhatsApp"
-        >
-          <WhatsappIcon />
-        </a>
-      )}
+      <div className="social-float-stack">
+        {business.googleMapsUrl && (
+          <a
+            href={business.googleMapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="social-float-btn social-float-btn-googlemaps"
+            aria-label="Buka lokasi di Google Maps"
+          >
+            <AddressIcon />
+          </a>
+        )}
+        {business.shopee && (
+          <a
+            href={business.shopee}
+            target="_blank"
+            rel="noreferrer"
+            className="social-float-btn social-float-btn-shopee"
+            aria-label="Kunjungi toko Shopee"
+          >
+            <ShopeeIcon />
+          </a>
+        )}
+        {business.instagram && (
+          <a
+            href={`https://instagram.com/${business.instagram}`}
+            target="_blank"
+            rel="noreferrer"
+            className="social-float-btn social-float-btn-instagram"
+            aria-label="Kunjungi Instagram"
+          >
+            <InstagramIcon />
+          </a>
+        )}
+        {business.tiktok && (
+          <a
+            href={`https://tiktok.com/@${business.tiktok}`}
+            target="_blank"
+            rel="noreferrer"
+            className="social-float-btn social-float-btn-tiktok"
+            aria-label="Kunjungi TikTok"
+          >
+            <TiktokIcon />
+          </a>
+        )}
+        {business.whatsapp && (
+          <a
+            href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal pemesanan.')}
+            target="_blank"
+            rel="noreferrer"
+            className="wa-float-btn"
+            aria-label="Chat WhatsApp"
+            onClick={() => trackContact('floating_button')}
+          >
+            <WhatsappIcon />
+          </a>
+        )}
+      </div>
 
       <MobileBottomNav />
     </div>

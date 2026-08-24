@@ -4,6 +4,8 @@ import * as catalogService from '../services/catalogService';
 import * as checkoutService from '../services/checkoutService';
 import useCartStore from '../store/cartStore';
 import { calculatePrintPrice } from '../lib/calculator';
+import { trackCheckoutConversion } from '../lib/experiment';
+import { trackPurchase, trackContact } from '../lib/analytics';
 import { formatCurrency } from '../lib/format';
 import { waLink } from '../lib/business';
 import FileUploadField from '../components/FileUploadField';
@@ -102,6 +104,8 @@ export default function Checkout() {
         voucherCode: voucherResult ? voucherCode.trim().toUpperCase() : undefined,
       });
       clearCart();
+      trackCheckoutConversion(data.poId);
+      trackPurchase({ poId: data.poId, total: finalTotal });
       navigate(`/pesanan/${data.poId}`);
     } catch (err) {
       setError(err?.response?.data?.message || 'Gagal checkout, coba lagi.');
@@ -220,7 +224,12 @@ export default function Checkout() {
             </button>
             <p className="text-muted" style={{ fontSize: '0.78rem', marginTop: 10 }}>
               Ada pertanyaan?{' '}
-              <a href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal checkout.')} target="_blank" rel="noreferrer">
+              <a
+                href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal checkout.')}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => trackContact('checkout_page')}
+              >
                 Chat WhatsApp
               </a>
             </p>

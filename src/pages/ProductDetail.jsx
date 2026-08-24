@@ -6,6 +6,8 @@ import UploadDesainPanel from '../components/UploadDesainPanel';
 import ShareRow from '../components/ShareRow';
 import RichText from '../components/RichText';
 import useCartStore from '../store/cartStore';
+import { formatCurrency } from '../lib/format';
+import { trackViewContent, trackAddToCart } from '../lib/analytics';
 
 export default function ProductDetail() {
   const { productKey } = useParams();
@@ -29,6 +31,13 @@ export default function ProductDetail() {
     setAdded(false);
   }, [productKey]);
 
+  // ViewContent (Fase 1.A) - dipisah jadi useEffect sendiri (bukan langsung di body komponen)
+  // supaya tetap di atas kedua early return di bawah dan urutan hook tidak berubah antar render.
+  useEffect(() => {
+    const product = catalog?.products.find((p) => p.key === productKey);
+    if (product) trackViewContent(product);
+  }, [catalog, productKey]);
+
   if (error) return <div className="section container"><div className="alert alert-error">{error}</div></div>;
   if (!catalog) return <div className="section container"><p className="text-muted">Memuat...</p></div>;
 
@@ -49,6 +58,7 @@ export default function ProductDetail() {
   const handleAddToCart = (item) => {
     addItem({ ...item, fileUrl, designLink: designLink || null, specNote: '' });
     setAdded(true);
+    trackAddToCart(product, item.estimatedTotal);
   };
 
   return (
@@ -59,7 +69,7 @@ export default function ProductDetail() {
             <img
               src={mainPhoto}
               alt={product.name}
-              style={{ width: '100%', borderRadius: 'var(--radius-lg)', marginBottom: 8, objectFit: 'cover', maxHeight: 320 }}
+              style={{ width: '100%', borderRadius: '3px', marginBottom: 8, objectFit: 'cover', maxHeight: 320 }}
             />
           ) : (
             <div className="product-thumb" style={{ height: 200, fontSize: '2.5rem', marginBottom: 8 }}>
@@ -77,7 +87,7 @@ export default function ProductDetail() {
                   style={{
                     padding: 0,
                     border: index === activePhoto ? '2px solid var(--red-500, #ef3e55)' : '2px solid transparent',
-                    borderRadius: 8,
+                    borderRadius: 3,
                     overflow: 'hidden',
                     cursor: 'pointer',
                     background: 'none',
@@ -112,6 +122,11 @@ export default function ProductDetail() {
               Harga per {product.unitLabel || (product.mode === 'area' ? 'm²' : 'pcs')}
             </span>
             {product.soldCount > 0 && <span className="badge badge-muted">{product.soldCount}+ terjual</span>}
+            {product.discount && (
+              <span className="badge badge-discount">
+                {product.discount.type === 'percent' ? `Diskon ${product.discount.value}%` : `Diskon ${formatCurrency(product.discount.value)}`}
+              </span>
+            )}
           </div>
           <h1>{product.name}</h1>
 

@@ -1,5 +1,6 @@
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import { waLink } from '../lib/business';
+import { trackContact } from '../lib/analytics';
 
 export default function JamLayanan() {
   const business = useSiteSettingsStore((s) => s.settings);
@@ -20,6 +21,7 @@ export default function JamLayanan() {
             rel="noreferrer"
             className="btn btn-primary"
             style={{ marginTop: '1rem', display: 'inline-flex' }}
+            onClick={() => trackContact('jam_layanan_page')}
           >
             Tanya via WhatsApp
           </a>

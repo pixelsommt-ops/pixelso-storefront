@@ -4,6 +4,7 @@ import * as catalogService from '../services/catalogService';
 import useCartStore from '../store/cartStore';
 import { calculatePrintPrice } from '../lib/calculator';
 import { formatCurrency } from '../lib/format';
+import { trackInitiateCheckout } from '../lib/analytics';
 
 export default function Cart() {
   const [catalog, setCatalog] = useState(null);
@@ -74,7 +75,10 @@ export default function Cart() {
           type="button"
           className="btn btn-primary"
           style={{ width: '100%', marginTop: 14 }}
-          onClick={() => navigate('/checkout')}
+          onClick={() => {
+            trackInitiateCheckout(items, subtotal);
+            navigate('/checkout');
+          }}
         >
           Lanjut ke Checkout
         </button>

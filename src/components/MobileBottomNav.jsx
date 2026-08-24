@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { HomeIcon, PromoIcon, KategoriIcon, ProfilIcon, KalkulatorIcon } from './BottomNavIcons';
+import { HomeIcon, PromoIcon, KategoriIcon, ProfilIcon, KalkulatorIcon, BlogIcon } from './BottomNavIcons';
 
 // Tab bar bawah, gaya marketplace (Shopee/Tokopedia) - cuma tampil di layar mobile,
 // lihat aturan CSS ".bottom-nav" di index.css. Desktop/tablet pakai nav atas seperti biasa.
@@ -9,6 +9,10 @@ export default function MobileBottomNav() {
       <NavLink to="/" end className={({ isActive }) => `bottom-nav-link${isActive ? ' active' : ''}`}>
         <HomeIcon />
         <span>Beranda</span>
+      </NavLink>
+      <NavLink to="/blog" className={({ isActive }) => `bottom-nav-link${isActive ? ' active' : ''}`}>
+        <BlogIcon />
+        <span>Blog</span>
       </NavLink>
       <NavLink to="/promo" className={({ isActive }) => `bottom-nav-link${isActive ? ' active' : ''}`}>
         <PromoIcon />

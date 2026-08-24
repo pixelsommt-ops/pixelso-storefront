@@ -49,6 +49,14 @@ export function CopyLinkIcon(props) {
   );
 }
 
+export function ShopeeIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M7 9V7a5 5 0 0 1 10 0v2h2.2c.5 0 .93.36 1 .86l1.2 9A2 2 0 0 1 19.4 21H4.6a2 2 0 0 1-1.98-2.14l1.2-9a1 1 0 0 1 1-.86H7Zm2 0h6V7a3 3 0 0 0-6 0v2Z" />
+    </svg>
+  );
+}
+
 export function YoutubeIcon(props) {
   return (
     <svg {...base} {...props}>
