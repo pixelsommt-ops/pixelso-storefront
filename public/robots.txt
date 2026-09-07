@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /keranjang
+Disallow: /checkout
+Disallow: /pesanan
+Disallow: /login
+Disallow: /daftar
+Disallow: /lupa-password
+Disallow: /reset-password
+
+Sitemap: https://www.cetakpixelso.com/sitemap.xml
