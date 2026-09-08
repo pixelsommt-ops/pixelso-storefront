@@ -80,6 +80,8 @@ export default function ProductDetail() {
             <img
               src={mainPhoto}
               alt={productImageAlt(product)}
+              loading="eager"
+              fetchPriority="high"
               style={{ width: '100%', borderRadius: '3px', marginBottom: 8, objectFit: 'cover', maxHeight: 320 }}
             />
           ) : (
@@ -108,7 +110,7 @@ export default function ProductDetail() {
                   }}
                   aria-label={`Lihat foto ${index + 1}`}
                 >
-                  <img src={url} alt={productImageAlt(product, `foto ${index + 1}`)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={url} alt={productImageAlt(product, `foto ${index + 1}`)} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </button>
               ))}
             </div>

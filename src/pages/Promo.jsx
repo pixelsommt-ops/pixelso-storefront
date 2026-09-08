@@ -31,6 +31,7 @@ export default function Promo() {
               <img
                 src={promo.imageUrl}
                 alt={promo.title}
+                loading="lazy"
                 style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: '3px', display: 'block' }}
               />
             ) : (

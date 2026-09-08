@@ -39,7 +39,7 @@ export default function Kategori() {
         {categories.map(([name, { count, imageUrl }]) => (
           <Link key={name} to={`/katalog?kategori=${encodeURIComponent(name)}`} className="kategori-tile">
             <span className="kategori-tile-icon">
-              {imageUrl ? <img src={imageUrl} alt={name} /> : name.charAt(0)}
+              {imageUrl ? <img src={imageUrl} alt={name} loading="lazy" /> : name.charAt(0)}
             </span>
             <span>{name}</span>
             <span className="text-muted" style={{ fontSize: '0.7rem' }}>{count} produk</span>

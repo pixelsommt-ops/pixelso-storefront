@@ -25,7 +25,7 @@ export default function HeroProductStrip({ products }) {
         {products.map((p) => (
           <Link key={p.key} to={`/produk/${p.key}`} className="hero-strip-item">
             <div className="hero-strip-thumb">
-              {p.imageUrl ? <img src={p.imageUrl} alt={productImageAlt(p)} /> : <span>{p.name.charAt(0)}</span>}
+              {p.imageUrl ? <img src={p.imageUrl} alt={productImageAlt(p)} loading="lazy" /> : <span>{p.name.charAt(0)}</span>}
             </div>
             <p className="hero-strip-name">{p.name}</p>
             <p className="hero-strip-price">
