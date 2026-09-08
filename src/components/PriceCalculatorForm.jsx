@@ -40,6 +40,7 @@ export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
     onAddToCart({
       productKey: product.key,
       productName: product.name,
+      category: product.category,
       mode: product.mode,
       unitLabel: product.unitLabel,
       width: isAreaMode ? Number(form.width) : 0,

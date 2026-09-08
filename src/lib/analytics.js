@@ -62,7 +62,13 @@ export function trackViewContent(product) {
     window.gtag('event', 'view_item', {
       currency: 'IDR',
       value,
-      items: [{ item_id: product.key, item_name: product.name }],
+      items: [{
+        item_id: product.key,
+        item_name: product.name,
+        item_category: product.category || undefined,
+        price: value,
+        quantity: 1,
+      }],
     });
   }
   if (hasFn('fbq')) {
@@ -90,7 +96,13 @@ export function trackAddToCart(product, estimatedValue) {
     window.gtag('event', 'add_to_cart', {
       currency: 'IDR',
       value,
-      items: [{ item_id: product.key, item_name: product.name }],
+      items: [{
+        item_id: product.key,
+        item_name: product.name,
+        item_category: product.category || undefined,
+        price: value,
+        quantity: 1,
+      }],
     });
   }
   if (hasFn('fbq')) {
@@ -112,18 +124,38 @@ export function trackAddToCart(product, estimatedValue) {
 }
 
 // Dipanggil saat pengunjung lanjut dari Keranjang ke Checkout (pages/Cart.jsx).
+// item.estimatedTotal adalah total baris (bukan harga satuan) - produk cetak custom dihitung
+// dari luas/dimensi+finishing, bukan harga tetap per pcs, jadi "price" per unit didekati dengan
+// membagi total baris dengan quantity supaya tetap mengisi skema item GA4/Meta/TikTok yang standar.
+function toGa4Item(i) {
+  const quantity = Number(i.quantity) || 1;
+  const lineTotal = Number(i.estimatedTotal) || 0;
+  return {
+    item_id: i.productKey,
+    item_name: i.productName,
+    item_category: i.category || undefined,
+    price: quantity > 0 ? lineTotal / quantity : lineTotal,
+    quantity,
+  };
+}
+
 export function trackInitiateCheckout(items, total) {
   const value = Number(total) || 0;
   if (hasFn('gtag')) {
     window.gtag('event', 'begin_checkout', {
       currency: 'IDR',
       value,
-      items: items.map((i) => ({ item_id: i.productKey, item_name: i.productName })),
+      items: items.map(toGa4Item),
     });
   }
   if (hasFn('fbq')) {
     window.fbq('track', 'InitiateCheckout', {
       content_ids: items.map((i) => i.productKey),
+      contents: items.map((i) => {
+        const g = toGa4Item(i);
+        return { id: g.item_id, quantity: g.quantity, item_price: g.price };
+      }),
+      content_type: 'product',
       currency: 'IDR',
       value,
       num_items: items.length,
@@ -131,7 +163,16 @@ export function trackInitiateCheckout(items, total) {
   }
   if (window.ttq) {
     window.ttq.track('InitiateCheckout', {
-      contents: items.map((i) => ({ content_id: i.productKey, content_name: i.productName })),
+      contents: items.map((i) => {
+        const g = toGa4Item(i);
+        return {
+          content_id: g.item_id,
+          content_name: g.item_name,
+          content_category: g.item_category,
+          quantity: g.quantity,
+          price: g.price,
+        };
+      }),
       currency: 'IDR',
       value,
     });
@@ -142,16 +183,18 @@ export function trackInitiateCheckout(items, total) {
 // yang disebut di rencana Fase 1.A ("Purchase"). Kalau VITE_GOOGLE_ADS_CONVERSION_ID + LABEL
 // sudah diisi (lihat .env.example), event ini juga sekaligus memicu conversion Google Ads lewat
 // gtag.js yang sama (tidak perlu script terpisah).
-export function trackPurchase(order) {
+export function trackPurchase(order, items = []) {
   const value = Number(order?.total) || 0;
   const transactionId = String(order?.poId || '');
   const utm = getStoredUtm();
+  const ga4Items = items.map(toGa4Item);
 
   if (hasFn('gtag')) {
     window.gtag('event', 'purchase', {
       transaction_id: transactionId,
       currency: 'IDR',
       value,
+      items: ga4Items,
       ...utm,
     });
     const adsId = import.meta.env.VITE_GOOGLE_ADS_CONVERSION_ID;
@@ -166,13 +209,27 @@ export function trackPurchase(order) {
     }
   }
   if (hasFn('fbq')) {
-    window.fbq('track', 'Purchase', { currency: 'IDR', value, ...utm });
+    window.fbq('track', 'Purchase', {
+      currency: 'IDR',
+      value,
+      content_ids: ga4Items.map((i) => i.item_id),
+      contents: ga4Items.map((i) => ({ id: i.item_id, quantity: i.quantity, item_price: i.price })),
+      content_type: 'product',
+      ...utm,
+    });
   }
   if (window.ttq) {
     window.ttq.track('Purchase', {
       currency: 'IDR',
       value,
       order_id: transactionId,
+      contents: ga4Items.map((i) => ({
+        content_id: i.item_id,
+        content_name: i.item_name,
+        content_category: i.item_category,
+        quantity: i.quantity,
+        price: i.price,
+      })),
       ...utm,
     });
   }

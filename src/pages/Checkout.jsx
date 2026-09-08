@@ -105,7 +105,7 @@ export default function Checkout() {
       });
       clearCart();
       trackCheckoutConversion(data.poId);
-      trackPurchase({ poId: data.poId, total: finalTotal });
+      trackPurchase({ poId: data.poId, total: finalTotal }, items);
       navigate(`/pesanan/${data.poId}`);
     } catch (err) {
       setError(err?.response?.data?.message || 'Gagal checkout, coba lagi.');
