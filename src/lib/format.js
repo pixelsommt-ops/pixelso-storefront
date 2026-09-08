@@ -1,3 +1,11 @@
+// Alt text deskriptif untuk gambar produk (SEO gambar) - sebelumnya cuma nama produk polos,
+// sekarang sertakan kategori + brand supaya lebih relevan buat pencarian gambar Google.
+export function productImageAlt(product, extra = '') {
+  const category = product?.category ? ` ${product.category}` : '';
+  const suffix = extra ? ` - ${extra}` : '';
+  return `${product?.name || 'Produk'} - cetak${category} custom Pixelso Gemolong${suffix}`;
+}
+
 export function formatCurrency(value) {
   const num = Number(value || 0);
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);

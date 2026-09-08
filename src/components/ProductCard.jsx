@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { formatCurrency, truncateDescription } from '../lib/format';
+import { formatCurrency, truncateDescription, productImageAlt } from '../lib/format';
 
 export default function ProductCard({ product }) {
   const { text: descriptionPreview, isTruncated } = truncateDescription(product.description);
@@ -8,7 +8,7 @@ export default function ProductCard({ product }) {
     <Link to={`/produk/${product.key}`} className="card product-card" style={{ textDecoration: 'none' }}>
       {product.imageUrl ? (
         <div className="product-thumb">
-          <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={product.imageUrl} alt={productImageAlt(product)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       ) : (
         <div className="product-thumb">{product.name.charAt(0)}</div>

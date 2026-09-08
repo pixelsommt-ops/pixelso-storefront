@@ -6,7 +6,7 @@ import UploadDesainPanel from '../components/UploadDesainPanel';
 import ShareRow from '../components/ShareRow';
 import RichText from '../components/RichText';
 import useCartStore from '../store/cartStore';
-import { formatCurrency } from '../lib/format';
+import { formatCurrency, productImageAlt } from '../lib/format';
 import { trackViewContent, trackAddToCart } from '../lib/analytics';
 import Seo from '../components/Seo';
 
@@ -79,7 +79,7 @@ export default function ProductDetail() {
           {mainPhoto ? (
             <img
               src={mainPhoto}
-              alt={product.name}
+              alt={productImageAlt(product)}
               style={{ width: '100%', borderRadius: '3px', marginBottom: 8, objectFit: 'cover', maxHeight: 320 }}
             />
           ) : (
@@ -108,7 +108,7 @@ export default function ProductDetail() {
                   }}
                   aria-label={`Lihat foto ${index + 1}`}
                 >
-                  <img src={url} alt={`${product.name} - foto ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={url} alt={productImageAlt(product, `foto ${index + 1}`)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </button>
               ))}
             </div>

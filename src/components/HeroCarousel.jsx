@@ -29,7 +29,7 @@ export default function HeroCarousel({ slides, altText }) {
         const img = (
           <img
             src={slide.url}
-            alt={`${altText} ${index + 1}`}
+            alt={`Banner promosi ${altText} ${index + 1}`}
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         );

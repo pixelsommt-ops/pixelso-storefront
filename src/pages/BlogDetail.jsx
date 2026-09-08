@@ -57,7 +57,7 @@ export default function BlogDetail() {
         {post.coverImageUrl && (
           <img
             src={post.coverImageUrl}
-            alt={post.title}
+            alt={`${post.title} - artikel blog Pixelso Gemolong`}
             style={{ width: '100%', maxHeight: 420, objectFit: 'cover', borderRadius: '3px', margin: '1rem 0' }}
           />
         )}

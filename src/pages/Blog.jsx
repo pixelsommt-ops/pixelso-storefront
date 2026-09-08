@@ -38,7 +38,7 @@ export default function Blog() {
             <Link key={post.postId} to={`/blog/${post.slug}`} className="card product-card" style={{ textDecoration: 'none' }}>
               {post.coverImageUrl ? (
                 <div className="product-thumb">
-                  <img src={post.coverImageUrl} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={post.coverImageUrl} alt={`${post.title} - artikel blog Pixelso Gemolong`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               ) : (
                 <div className="product-thumb">{post.title.charAt(0)}</div>
