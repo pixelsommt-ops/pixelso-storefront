@@ -27,6 +27,11 @@ export default function HomeEcommerce({ activeProducts, visibleProducts, sentine
 
   return (
     <div className="ecommerce-home">
+      {/* Visually hidden - variant ini sengaja tanpa headline besar (gaya marketplace), tapi
+          halaman tetap butuh H1 unik untuk SEO/aksesibilitas (screen reader). */}
+      <h1 style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
+        {business.heroHeadline || 'Pesan Cetak Online, Prosesnya Cepat & Transparan - Pixelso Gemolong'}
+      </h1>
       {business.heroSlides?.length > 0 && (
         <section className="container" style={{ paddingTop: 16 }}>
           <div className="ecommerce-banner">

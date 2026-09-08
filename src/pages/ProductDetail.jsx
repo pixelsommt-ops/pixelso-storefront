@@ -140,7 +140,7 @@ export default function ProductDetail() {
 
           {Array.isArray(product.specs) && product.specs.length > 0 && (
             <div className="card card-sm" style={{ marginBottom: 16 }}>
-              <h3 style={{ fontSize: '0.9rem' }}>Spesifikasi</h3>
+              <h2 style={{ fontSize: '0.9rem' }}>Spesifikasi</h2>
               <ul style={{ margin: 0, paddingLeft: 18 }}>
                 {product.specs.map((spec, index) => (
                   <li key={index} className="text-muted" style={{ fontSize: '0.85rem', marginBottom: 4 }}>{spec}</li>
