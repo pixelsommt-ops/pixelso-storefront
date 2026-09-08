@@ -25,15 +25,6 @@ export default function StorefrontLayout() {
     fetchSettings();
   }, [fetchSettings]);
 
-  // Judul tab browser ikut Nama Bisnis yang diatur di ERP ("Halaman Depan (Website)"),
-  // bukan hardcode - lihat store/siteSettingsStore.js. index.html cuma menyimpan fallback
-  // sebelum fetch ini selesai.
-  useEffect(() => {
-    if (business.name) {
-      document.title = business.tagline ? `${business.name} - ${business.tagline}` : business.name;
-    }
-  }, [business.name, business.tagline]);
-
   // Tutup menu burger otomatis tiap pindah halaman (mis. lewat tombol back/forward browser).
   useEffect(() => setMenuOpen(false), [location.pathname]);
 
