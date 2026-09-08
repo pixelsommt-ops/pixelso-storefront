@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useCatalogStore from '../store/catalogStore';
+import Seo from '../components/Seo';
 
 // Halaman tab "Kategori" di bottom nav mobile - marketplace-style, ubin kategori
 // yang tap ke Katalog dengan filter ?kategori=. Data sama dengan yang dipakai SubNav
@@ -28,6 +29,7 @@ export default function Kategori() {
 
   return (
     <div className="section container">
+      <Seo title="Kategori Produk" description="Pilih kategori produk cetak Pixelso Gemolong: banner, stiker, kartu nama, mug, kaos, dan lainnya." path="/kategori" />
       <div className="section-head">
         <h1>Kategori</h1>
         <p className="text-muted section-head-desc">Pilih kategori untuk lihat produknya.</p>

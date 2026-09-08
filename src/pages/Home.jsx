@@ -4,6 +4,7 @@ import useInfiniteReveal from '../hooks/useInfiniteReveal';
 import { getHomeVariant } from '../lib/experiment';
 import HomeHero from './HomeHero';
 import HomeEcommerce from './HomeEcommerce';
+import Seo from '../components/Seo';
 
 // Beranda A/B test (2026-07-30) - variant ditentukan sekali per pengunjung lewat
 // getHomeVariant() (lib/experiment.js), lalu tetap sama tiap kunjungan berikutnya. Lihat hasil
@@ -22,9 +23,14 @@ export default function Home() {
   const { visibleCount, sentinelRef } = useInfiniteReveal(activeProducts.length, 10);
   const visibleProducts = activeProducts.slice(0, visibleCount);
 
-  return variant === 'ecommerce' ? (
-    <HomeEcommerce activeProducts={activeProducts} visibleProducts={visibleProducts} sentinelRef={sentinelRef} />
-  ) : (
-    <HomeHero visibleProducts={visibleProducts} sentinelRef={sentinelRef} />
+  return (
+    <>
+      <Seo path="/" />
+      {variant === 'ecommerce' ? (
+        <HomeEcommerce activeProducts={activeProducts} visibleProducts={visibleProducts} sentinelRef={sentinelRef} />
+      ) : (
+        <HomeHero visibleProducts={visibleProducts} sentinelRef={sentinelRef} />
+      )}
+    </>
   );
 }

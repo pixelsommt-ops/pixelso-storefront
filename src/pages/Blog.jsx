@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as blogService from '../services/blogService';
+import Seo from '../components/Seo';
 
 function formatDate(value) {
   return new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -16,6 +17,7 @@ export default function Blog() {
 
   return (
     <div className="section container">
+      <Seo title="Blog" description="Tips seputar cetak, desain, dan cerita di balik layar Pixelso." path="/blog" />
       <div className="section-head">
         <h1>Blog</h1>
         <p className="text-muted">Tips seputar cetak, desain, dan cerita di balik layar Pixelso.</p>

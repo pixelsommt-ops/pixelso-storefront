@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as promoService from '../services/promoService';
+import Seo from '../components/Seo';
 
 function formatDate(value) {
   return new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -15,6 +16,7 @@ export default function Promo() {
 
   return (
     <div className="section container">
+      <Seo title="Promo" description="Penawaran spesial yang lagi berlaku di Pixelso Gemolong." path="/promo" />
       <div className="section-head">
         <h1>Promo</h1>
         <p className="text-muted">Penawaran spesial yang lagi berlaku di Pixelso.</p>

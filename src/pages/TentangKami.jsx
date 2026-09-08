@@ -1,11 +1,13 @@
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import RichText from '../components/RichText';
+import Seo from '../components/Seo';
 
 export default function TentangKami() {
   const business = useSiteSettingsStore((s) => s.settings);
 
   return (
     <div className="section container">
+      <Seo title="Tentang Kami" description={business.description} path="/tentang-kami" />
       <div className="section-head">
         <h1>Tentang Kami</h1>
         <p className="text-muted">{business.tagline}</p>

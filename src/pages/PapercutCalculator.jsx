@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { calculatePaperCut, SHEET_PRESETS } from '../lib/papercutCalculator';
+import Seo from '../components/Seo';
 
 const EMPTY = { sheetW: 32, sheetH: 47, pieceW: 9, pieceH: 5.5, margin: 0.5, gap: 0.2, quantity: 1000 };
 const MAX_PREVIEW_CELLS = 144;
@@ -17,6 +18,11 @@ export default function PapercutCalculator() {
 
   return (
     <div className="section container">
+      <Seo
+        title="Kalkulator Papercut"
+        description="Hitung berapa potongan hasil jadi yang muat dari satu lembar bahan, lengkap dengan kebutuhan jumlah lembar, gratis dan online."
+        path="/kalkulator-papercut"
+      />
       <div className="section-head">
         <h1>Kalkulator Papercut</h1>
         <p className="text-muted">

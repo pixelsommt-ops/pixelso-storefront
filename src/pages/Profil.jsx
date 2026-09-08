@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import Seo from '../components/Seo';
 
 // Halaman tab "Profil" di bottom nav mobile - ringkas: identitas akun + pintasan
 // Pesanan Saya kalau sudah login, atau ajakan Masuk/Daftar kalau belum.
@@ -15,6 +16,7 @@ export default function Profil() {
 
   return (
     <div className="section container" style={{ maxWidth: 480 }}>
+      <Seo title="Profil" path="/profil" noindex />
       <div className="section-head">
         <h1>Profil</h1>
       </div>

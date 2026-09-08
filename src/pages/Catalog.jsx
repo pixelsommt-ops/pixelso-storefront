@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import * as catalogService from '../services/catalogService';
 import ProductCard from '../components/ProductCard';
 import useInfiniteReveal from '../hooks/useInfiniteReveal';
+import Seo from '../components/Seo';
 
 export default function Catalog() {
   const [catalog, setCatalog] = useState(null);
@@ -28,6 +29,11 @@ export default function Catalog() {
 
   return (
     <div className="section container">
+      <Seo
+        title={kategori ? `Katalog ${kategori}` : 'Katalog Produk'}
+        description={kategori ? `Lihat semua produk kategori ${kategori} di Pixelso Gemolong.` : 'Katalog lengkap produk cetak Pixelso Gemolong - banner, stiker, kartu nama, mug, kaos, dan lainnya.'}
+        path="/katalog"
+      />
       <div className="section-head">
         <h1>{kategori || 'Katalog Produk'}</h1>
         {query ? (

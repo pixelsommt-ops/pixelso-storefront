@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import * as blogService from '../services/blogService';
 import RichText from '../components/RichText';
+import Seo from '../components/Seo';
+
+function stripHtml(html) {
+  return String(html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
 
 function formatDate(value) {
   return new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -40,6 +45,12 @@ export default function BlogDetail() {
 
   return (
     <div className="section container">
+      <Seo
+        title={post.title}
+        description={stripHtml(post.content).slice(0, 200) || undefined}
+        path={`/blog/${post.slug}`}
+        image={post.coverImageUrl}
+      />
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
         <Link to="/blog" className="text-muted" style={{ fontSize: '0.85rem' }}>&larr; Kembali ke Blog</Link>
         <h1 style={{ marginTop: '0.75rem' }}>{post.title}</h1>

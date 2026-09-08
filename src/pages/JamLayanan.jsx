@@ -1,12 +1,14 @@
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import { waLink } from '../lib/business';
 import { trackContact } from '../lib/analytics';
+import Seo from '../components/Seo';
 
 export default function JamLayanan() {
   const business = useSiteSettingsStore((s) => s.settings);
 
   return (
     <div className="section container">
+      <Seo title="Jam Layanan" description="Kapan Pixelso Gemolong buka dan bisa dihubungi untuk konsultasi cetak." path="/jam-layanan" />
       <div className="section-head">
         <h1>Jam Layanan</h1>
         <p className="text-muted">Kapan Pixelso buka dan bisa dihubungi untuk konsultasi cetak.</p>

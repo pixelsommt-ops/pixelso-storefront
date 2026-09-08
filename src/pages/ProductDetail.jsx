@@ -8,6 +8,11 @@ import RichText from '../components/RichText';
 import useCartStore from '../store/cartStore';
 import { formatCurrency } from '../lib/format';
 import { trackViewContent, trackAddToCart } from '../lib/analytics';
+import Seo from '../components/Seo';
+
+function stripHtml(html) {
+  return String(html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
 
 export default function ProductDetail() {
   const { productKey } = useParams();
@@ -63,6 +68,12 @@ export default function ProductDetail() {
 
   return (
     <div className="section container">
+      <Seo
+        title={product.name}
+        description={stripHtml(product.description).slice(0, 200) || undefined}
+        path={`/produk/${product.key}`}
+        image={mainPhoto}
+      />
       <div className="grid grid-2">
         <div>
           {mainPhoto ? (
