@@ -26,6 +26,8 @@ function setTag(selector, createTag, attrs) {
 export default function Seo({ title, description = DEFAULT_DESCRIPTION, path = '/', image = DEFAULT_IMAGE, noindex = false }) {
   const fullTitle = title ? `${title} - ${SITE_NAME}` : `${SITE_NAME} - Pesan Cetak Online`;
   const url = `${SITE_URL}${path}`;
+  // og:image/twitter:image wajib absolute URL - data produk/blog nyimpen path relatif ("/uploads/..")
+  const absoluteImage = image && !/^https?:\/\//.test(image) ? `${SITE_URL}${image}` : image || DEFAULT_IMAGE;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -56,7 +58,7 @@ export default function Seo({ title, description = DEFAULT_DESCRIPTION, path = '
       'og:locale': 'id_ID',
       'og:title': fullTitle,
       'og:description': description,
-      'og:image': image,
+      'og:image': absoluteImage,
     };
     Object.entries(og).forEach(([prop, content]) => {
       setTag(`meta[property="${prop}"]`, () => {
@@ -70,7 +72,7 @@ export default function Seo({ title, description = DEFAULT_DESCRIPTION, path = '
       'twitter:card': 'summary_large_image',
       'twitter:title': fullTitle,
       'twitter:description': description,
-      'twitter:image': image,
+      'twitter:image': absoluteImage,
     };
     Object.entries(twitter).forEach(([name, content]) => {
       setTag(`meta[name="${name}"]`, () => {
@@ -79,7 +81,7 @@ export default function Seo({ title, description = DEFAULT_DESCRIPTION, path = '
         return m;
       }, { content });
     });
-  }, [fullTitle, description, url, image, noindex]);
+  }, [fullTitle, description, url, absoluteImage, noindex]);
 
   return null;
 }
