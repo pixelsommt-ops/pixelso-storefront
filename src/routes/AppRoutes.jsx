@@ -16,6 +16,7 @@ const Profil = lazy(() => import('../pages/Profil'));
 const Promo = lazy(() => import('../pages/Promo'));
 const JamLayanan = lazy(() => import('../pages/JamLayanan'));
 const TentangKami = lazy(() => import('../pages/TentangKami'));
+const KebijakanPrivasi = lazy(() => import('../pages/KebijakanPrivasi'));
 const Blog = lazy(() => import('../pages/Blog'));
 const BlogDetail = lazy(() => import('../pages/BlogDetail'));
 const ProductDetail = lazy(() => import('../pages/ProductDetail'));
@@ -40,6 +41,7 @@ export default function AppRoutes() {
           <Route path="/promo" element={<Promo />} />
           <Route path="/jam-layanan" element={<JamLayanan />} />
           <Route path="/tentang-kami" element={<TentangKami />} />
+          <Route path="/kebijakan-privasi" element={<KebijakanPrivasi />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/kalkulator-papercut" element={<PapercutCalculator />} />

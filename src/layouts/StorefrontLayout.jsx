@@ -159,6 +159,7 @@ export default function StorefrontLayout() {
           </div>
           <p style={{ color: '#b98d97', fontSize: '0.8rem', margin: 0 }}>
             &copy; {new Date().getFullYear()} {business.name}. Semua pesanan diproses lewat toko yang sama.
+            {' '}<NavLink to="/kebijakan-privasi" style={{ color: '#d9b9c1' }}>Kebijakan Privasi</NavLink>
           </p>
         </div>
       </footer>
