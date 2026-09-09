@@ -4,6 +4,7 @@ import * as catalogService from '../services/catalogService';
 import PriceCalculatorForm from '../components/PriceCalculatorForm';
 import UploadDesainPanel from '../components/UploadDesainPanel';
 import ShareRow from '../components/ShareRow';
+import CaraPesanSteps from '../components/CaraPesanSteps';
 import RichText from '../components/RichText';
 import useCartStore from '../store/cartStore';
 import { formatCurrency, productImageAlt } from '../lib/format';
@@ -190,6 +191,15 @@ export default function ProductDetail() {
           onChangeFileUrl={setFileUrl}
           onChangeDesignLink={setDesignLink}
         />
+      </div>
+
+      {/* Cara Pesan - sebelumnya cuma tampil di homepage, jadi pengunjung yang landing langsung
+          ke halaman produk (dari iklan/Google) tidak pernah lihat alur order sama sekali. */}
+      <div className="section" style={{ marginTop: 8 }}>
+        <div className="section-head">
+          <h2>Cara Pesan</h2>
+        </div>
+        <CaraPesanSteps />
       </div>
     </div>
   );

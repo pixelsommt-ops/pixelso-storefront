@@ -4,6 +4,7 @@ import ValuePropTiles from '../components/ValuePropTiles';
 import CaraPesanSteps from '../components/CaraPesanSteps';
 import HeroCarousel from '../components/HeroCarousel';
 import HeroProductStrip from '../components/HeroProductStrip';
+import FaqAccordion from '../components/FaqAccordion';
 import RichText from '../components/RichText';
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import useAuthStore from '../store/authStore';
@@ -106,6 +107,25 @@ export default function HomeHero({ visibleProducts, sentinelRef }) {
           <h2>Cara Pesan</h2>
         </div>
         <CaraPesanSteps />
+      </section>
+
+      <section className="section container home-secondary">
+        <div className="section-head">
+          <h2>Got Questions?</h2>
+          <p className="text-muted section-head-desc">Pertanyaan yang sering ditanyakan seputar pemesanan.</p>
+        </div>
+        <FaqAccordion />
+      </section>
+
+      {/* CTA penutup - sebelumnya variant ini cuma punya CTA di atas fold (hero-cta-row), jadi
+          pengunjung yang scroll sampai bawah tanpa klik apa pun tidak pernah ketemu ajakan
+          bertindak lagi. */}
+      <section className="section container">
+        <div className="ecommerce-cta">
+          <h2 style={{ color: '#fff' }}>Siap Cetak Bareng Kami?</h2>
+          <p style={{ margin: '8px 0 20px' }}>Kualitas terjamin, proses cepat, harga transparan - mulai pesan sekarang.</p>
+          <Link to="/katalog" className="btn ecommerce-cta-btn">PESAN SEKARANG</Link>
+        </div>
       </section>
     </div>
   );

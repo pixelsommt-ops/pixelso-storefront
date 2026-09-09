@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import * as blogService from '../services/blogService';
 import RichText from '../components/RichText';
 import Seo from '../components/Seo';
+import ProductCard from '../components/ProductCard';
+import useCatalogStore from '../store/catalogStore';
 
 function stripHtml(html) {
   return String(html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -16,6 +18,13 @@ export default function BlogDetail() {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [error, setError] = useState('');
+  const products = useCatalogStore((s) => s.products);
+  const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
+  const relatedProducts = products.filter((p) => p.active).slice(0, 4);
+
+  useEffect(() => {
+    fetchCatalog();
+  }, [fetchCatalog]);
 
   useEffect(() => {
     setPost(null);
@@ -69,6 +78,22 @@ export default function BlogDetail() {
           Dikirim oleh <strong>{post.author?.name}</strong> &middot; {formatDate(post.publishedAt)}
         </p>
       </div>
+
+      {/* Internal link ke produk - sebelumnya artikel blog tidak pernah mengarahkan traffic
+          organik ke halaman produk/katalog sama sekali (cuma link "kembali ke blog"). */}
+      {relatedProducts.length > 0 && (
+        <div style={{ maxWidth: 960, margin: '2.5rem auto 0' }}>
+          <div className="section-head">
+            <h2 style={{ fontSize: '1.2rem' }}>Produk Pilihan</h2>
+            <Link to="/katalog" className="text-muted" style={{ fontSize: '0.85rem' }}>Lihat semua produk &rarr;</Link>
+          </div>
+          <div className="grid grid-4 product-grid">
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.key} product={p} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

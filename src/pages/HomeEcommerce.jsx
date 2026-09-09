@@ -7,6 +7,8 @@ import FaqAccordion from '../components/FaqAccordion';
 import ScrollReveal from '../components/ScrollReveal';
 import RichText from '../components/RichText';
 import useSiteSettingsStore from '../store/siteSettingsStore';
+import { waLink } from '../lib/business';
+import { trackContact } from '../lib/analytics';
 
 // Variant "ecommerce" dari A/B test beranda (lib/experiment.js) - gaya marketplace (Shopee):
 // banner tipis, grid kategori, lalu deretan section landing-page (2026-07-30, referensi
@@ -39,6 +41,24 @@ export default function HomeEcommerce({ activeProducts, visibleProducts, sentine
           </div>
         </section>
       )}
+
+      {/* CTA di atas fold - variant ini sebelumnya cuma punya CTA di section penutup paling
+          bawah (.ecommerce-cta), jadi pengunjung yang tidak scroll sampai bawah tidak pernah
+          lihat ajakan bertindak sama sekali. */}
+      <section className="container" style={{ padding: '16px 20px 0', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <Link to="/katalog" className="btn btn-primary">Lihat Katalog</Link>
+        {business.whatsapp && (
+          <a
+            href={waLink(business.whatsapp, 'Halo Pixelso, saya mau tanya soal pemesanan.')}
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-secondary"
+            onClick={() => trackContact('home_ecommerce_hero')}
+          >
+            Chat WhatsApp
+          </a>
+        )}
+      </section>
 
       <section className="section container">
         <div className="section-head section-head-center">

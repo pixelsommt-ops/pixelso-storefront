@@ -23,11 +23,25 @@ const FAQS = [
   },
 ];
 
+// FAQPage structured data (Schema.org) - dari FAQS yang sama supaya schema tidak pernah
+// menyimpang dari konten yang benar-benar tampil di halaman. Google mensyaratkan Q&A di schema
+// match dengan yang terlihat pengunjung, jadi ini SATU sumber data, bukan daftar terpisah.
+const FAQ_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
 export default function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
     <div className="faq-list">
+      <script type="application/ld+json">{JSON.stringify(FAQ_JSON_LD)}</script>
       {FAQS.map((item, index) => {
         const isOpen = openIndex === index;
         return (
