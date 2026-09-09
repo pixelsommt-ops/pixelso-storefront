@@ -5,6 +5,7 @@ import CaraPesanSteps from '../components/CaraPesanSteps';
 import HeroCarousel from '../components/HeroCarousel';
 import HeroProductStrip from '../components/HeroProductStrip';
 import FaqAccordion from '../components/FaqAccordion';
+import TestimonialGallery from '../components/TestimonialGallery';
 import RichText from '../components/RichText';
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import useAuthStore from '../store/authStore';
@@ -101,6 +102,8 @@ export default function HomeHero({ visibleProducts, sentinelRef }) {
           </div>
         </section>
       )}
+
+      <TestimonialGallery />
 
       <section className="section container home-secondary">
         <div className="section-head">

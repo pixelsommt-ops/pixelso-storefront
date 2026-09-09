@@ -4,6 +4,7 @@ import HeroCarousel from '../components/HeroCarousel';
 import ValuePropTiles from '../components/ValuePropTiles';
 import CaraPesanSteps from '../components/CaraPesanSteps';
 import FaqAccordion from '../components/FaqAccordion';
+import TestimonialGallery from '../components/TestimonialGallery';
 import ScrollReveal from '../components/ScrollReveal';
 import RichText from '../components/RichText';
 import useSiteSettingsStore from '../store/siteSettingsStore';
@@ -110,6 +111,10 @@ export default function HomeEcommerce({ activeProducts, visibleProducts, sentine
           ))}
         </div>
         <div ref={sentinelRef} />
+      </ScrollReveal>
+
+      <ScrollReveal>
+        <TestimonialGallery centered />
       </ScrollReveal>
 
       <ScrollReveal as="section" className="section container">
