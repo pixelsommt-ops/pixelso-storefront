@@ -62,25 +62,26 @@ Alasannya tiga:
 
 Yang perlu diubah di website: `index.html` (schema.org `name`) dan data bisnis di ERP. Bisa pakai `alternateName` untuk menyimpan "Pixelso DigiPrint & Creative Studio" agar branding tidak hilang.
 
-### 2. Alamat tidak konsisten
+### 2. Alamat: JANGAN UBAH DI GBP — pin Maps sudah benar
 
-```
-Google Maps  : Dusun 1, Gemolong, Kec. Gemolong, Kab. Sragen 50274
-Website      : Jl. Solo-Purwodadi KM.20 Gemolong Sragen
-```
+**Peringatan.** Saran awal di dokumen ini adalah "sarankan edit alamat di GBP". **Saran itu dicabut.** Owner mencoba mengubah alamat menjadi "Jl. Solo-Purwodadi KM.20" di GBP dan pin Maps justru bergeser ke selatan.
 
-Ini bukan sekadar beda tulisan — beda format sepenuhnya. Google Maps memakai penamaan administratif, website memakai patokan jalan.
+Setelah diperiksa, akar masalahnya kebalikan dari dugaan awal:
 
-**Rekomendasi:** samakan menjadi satu versi yang dipakai di mana-mana. Versi yang paling membantu pelanggan:
+| | Koordinat | Hasil reverse geocode |
+|---|---|---|
+| **Pin Google Maps** | -7.398063, 110.826437 | Jalan Solo - Purwodadi, Gemolong, Sragen ✓ |
+| **Geo lama di website** | -7.398122, 110.823852 | Ngembatpadas, Sragen ✗ (desa lain) |
 
-```
-Jl. Solo-Purwodadi KM.20, Dusun 1, Gemolong,
-Kec. Gemolong, Kab. Sragen, Jawa Tengah 50274
-```
+Selisihnya 285 meter ke barat. **Pin Maps sudah tepat sejak awal; yang salah adalah koordinat di schema.org website.** Itu sudah diperbaiki (commit `9f5efb3`), dan Plus Code website kini cocok persis dengan Maps: `JR2G+QH`.
 
-Format ini memuat patokan jalan (berguna bagi manusia) sekaligus data administratif (dikenali Google). Perbarui di GBP lewat "Sarankan edit", dan di website agar keduanya sama persis.
+Kesimpulan: **jangan sentuh alamat maupun pin di GBP.** Alamat administratif di Maps ("Dusun 1, Gemolong") memang berbeda gaya dari patokan jalan di website, tapi keduanya menunjuk titik yang sama, dan Google sudah memetakan lokasinya dengan benar.
 
-Kode pos juga belum ada di schema.org website — tambahkan `postalCode: "50274"`.
+### 2b. Kode pos: 57274, bukan 50274
+
+Panel Maps menampilkan "50274", tapi itu keliru — 50274 adalah wilayah Semarang. Kode pos Gemolong, Sragen yang benar adalah **57274**, dikonfirmasi oleh reverse geocode Nominatim dan empat sumber kode pos independen.
+
+Website sudah memakai 57274. Kalau di GBP masih tertulis 50274, itu boleh dikoreksi — tapi lakukan **hanya lewat kolom kode pos**, jangan menyentuh baris alamat atau pin, supaya lokasinya tidak ikut bergeser.
 
 ### 3. Kategori masih tunggal
 
@@ -140,7 +141,7 @@ Setiap produk di GBP bisa diberi tautan langsung ke halaman produknya. Ini menga
 ### Minggu ini (dampak besar, usaha kecil)
 
 1. **Samakan nama di website** menjadi "Percetakan Pixelso", simpan nama lama sebagai `alternateName`
-2. **Samakan alamat** di GBP dan website, tambahkan kode pos 50274
+2. **JANGAN ubah alamat atau pin di GBP** — pin sudah benar, koordinat website yang sudah diperbaiki. Kalau kode pos di GBP masih 50274, koreksi lewat kolom kode pos saja menjadi 57274.
 3. **Tambah 4–6 kategori tambahan** di GBP
 
 ### Dua minggu ke depan
