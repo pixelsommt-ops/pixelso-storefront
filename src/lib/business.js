@@ -6,7 +6,7 @@ export const DEFAULT_BUSINESS = {
   tagline: 'Print • Design • Create',
   description:
     'Percetakan lengkap satu atap untuk banner, stiker, apparel, offset, merchandise, laser cutting, dan branding.',
-  address: 'Jl. Raya Solo–Purwodadi Km. 20, Dusun 1, Gemolong, Kab. Sragen 50274 (sekitar 100 m selatan perempatan)',
+  address: 'Jl. Raya Solo–Purwodadi Km. 20, Dusun 1, Gemolong, Kab. Sragen 57274 (sekitar 100 m selatan perempatan)',
   openingHours: 'Senin–Sabtu • Konsultasi desain & cetak',
   whatsapp: '08156609299',
   instagram: 'cetakpixelso',
