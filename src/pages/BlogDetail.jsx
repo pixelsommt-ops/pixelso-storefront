@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import * as blogService from '../services/blogService';
 import RichText from '../components/RichText';
 import Seo from '../components/Seo';
+import JsonLd from '../components/JsonLd';
+import { buildArticleSchema, buildBlogBreadcrumbSchema } from '../lib/productSchema';
 import ProductCard from '../components/ProductCard';
 import useCatalogStore from '../store/catalogStore';
 
@@ -60,6 +62,8 @@ export default function BlogDetail() {
         path={`/blog/${post.slug}`}
         image={post.coverImageUrl}
       />
+      <JsonLd id="article" data={buildArticleSchema(post)} />
+      <JsonLd id="breadcrumb" data={buildBlogBreadcrumbSchema(post)} />
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
         <Link to="/blog" className="text-muted" style={{ fontSize: '0.85rem' }}>&larr; Kembali ke Blog</Link>
         <h1 style={{ marginTop: '0.75rem' }}>{post.title}</h1>

@@ -110,3 +110,67 @@ export function buildBreadcrumbSchema(product) {
 }
 
 export const __test__ = { absoluteUrl, stripHtml, SITE_URL, SITE_NAME };
+
+// --- BLOG ---------------------------------------------------------------------------------
+//
+// Schema Article untuk halaman artikel blog.
+//
+// Catatan kebijakan:
+//
+// - TIDAK ada dateModified. API blog hanya menyediakan publishedAt; tidak ada updatedAt sama
+//   sekali. Menyalin publishedAt jadi dateModified = mengklaim artikel "baru diperbarui" padahal
+//   tidak, dan Google memakai sinyal itu untuk freshness. Biarkan kosong sampai ERP menyimpan
+//   waktu edit yang sebenarnya.
+//
+// - publisher memakai logo brand (bukan foto portofolio) karena Google menampilkannya sebagai
+//   identitas penerbit di hasil pencarian.
+export function buildArticleSchema(post) {
+  if (!post || !post.slug || !post.title) return null;
+
+  const url = `${SITE_URL}/blog/${post.slug}`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title.slice(0, 110), // Google memotong headline di ~110 karakter
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo-pixelso-persegi.png` },
+    },
+  };
+
+  const description = stripHtml(post.content);
+  if (description) schema.description = description.slice(0, 300);
+
+  const image = absoluteUrl(post.coverImageUrl);
+  if (image) schema.image = [image];
+
+  if (post.publishedAt) schema.datePublished = post.publishedAt;
+  if (post.author?.name) schema.author = { '@type': 'Person', name: post.author.name };
+
+  return schema;
+}
+
+// Breadcrumb artikel: Beranda > Blog > Judul Artikel.
+export function buildBlogBreadcrumbSchema(post) {
+  if (!post || !post.slug || !post.title) return null;
+
+  const items = [
+    { name: 'Beranda', item: `${SITE_URL}/` },
+    { name: 'Blog', item: `${SITE_URL}/blog` },
+    { name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+  ];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: entry.name,
+      item: entry.item,
+    })),
+  };
+}

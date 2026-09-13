@@ -7,9 +7,10 @@
 // Yang diperiksa: bentuk schema valid, harga akurat, dan TIDAK ada rating palsu.
 
 import { readFileSync } from 'node:fs';
-import { buildProductSchema, buildBreadcrumbSchema } from '../src/lib/productSchema.js';
+import { buildProductSchema, buildBreadcrumbSchema, buildArticleSchema, buildBlogBreadcrumbSchema } from '../src/lib/productSchema.js';
 
 const CATALOG_URL = 'https://www.cetakpixelso.com/api/storefront/catalog';
+const BLOG_URL = 'https://www.cetakpixelso.com/api/storefront/blog';
 
 let failures = 0;
 let checks = 0;
@@ -98,6 +99,56 @@ check('produk null aman', buildProductSchema(null) === null);
 check('produk kosong aman', buildProductSchema({}) === null);
 check('breadcrumb null aman', buildBreadcrumbSchema(null) === null);
 check('produk tanpa name aman', buildProductSchema({ key: 'x' }) === null);
+
+// --- BLOG ---
+let posts = [];
+try {
+  const res = await fetch(BLOG_URL);
+  const body = await res.json();
+  posts = body.data ?? body;
+  if (!Array.isArray(posts)) posts = posts.posts ?? posts.items ?? [];
+} catch (err) {
+  console.log(`  (blog tidak bisa di-fetch: ${err.message})`);
+}
+
+console.log(`\nArtikel blog diuji: ${posts.length}`);
+for (const post of posts) {
+  const article = buildArticleSchema(post);
+  const crumb = buildBlogBreadcrumbSchema(post);
+  const tag = `[blog/${post.slug}]`;
+
+  check(`${tag} Article terbentuk`, article !== null);
+  if (!article) continue;
+
+  check(`${tag} @type Article`, article['@type'] === 'Article');
+  check(`${tag} headline maks 110 char`, article.headline.length <= 110, String(article.headline.length));
+  check(`${tag} url absolut`, article.url === `https://www.cetakpixelso.com/blog/${post.slug}`);
+  check(`${tag} mainEntityOfPage cocok url`, article.mainEntityOfPage['@id'] === article.url);
+  check(`${tag} publisher ada logo`, Boolean(article.publisher?.logo?.url));
+
+  // Kebijakan: dateModified TIDAK boleh dikarang dari publishedAt.
+  check(`${tag} TIDAK ada dateModified karangan`, article.dateModified === undefined);
+
+  if (post.publishedAt) {
+    check(`${tag} datePublished terisi`, article.datePublished === post.publishedAt);
+  }
+  if (article.description) {
+    check(`${tag} description bersih HTML`, !/[<>]/.test(article.description));
+  }
+  if (article.image) {
+    check(`${tag} image absolut`, article.image.every((u) => /^https?:\/\//.test(u)));
+  }
+  if (post.author?.name) {
+    check(`${tag} author terisi`, article.author?.name === post.author.name);
+  }
+
+  check(`${tag} breadcrumb 3 level`, crumb?.itemListElement.length === 3);
+  check(`${tag} breadcrumb Beranda > Blog`, crumb?.itemListElement[1]?.name === 'Blog');
+}
+
+check('article null aman', buildArticleSchema(null) === null);
+check('article tanpa slug aman', buildArticleSchema({ title: 'x' }) === null);
+check('blog breadcrumb null aman', buildBlogBreadcrumbSchema(null) === null);
 
 console.log(`\n${checks - failures}/${checks} pemeriksaan lolos`);
 if (failures > 0) {
