@@ -10,6 +10,8 @@ import useCartStore from '../store/cartStore';
 import { formatCurrency, productImageAlt } from '../lib/format';
 import { trackViewContent, trackAddToCart } from '../lib/analytics';
 import Seo from '../components/Seo';
+import JsonLd from '../components/JsonLd';
+import { buildProductSchema, buildBreadcrumbSchema } from '../lib/productSchema';
 
 function stripHtml(html) {
   return String(html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -75,6 +77,8 @@ export default function ProductDetail() {
         path={`/produk/${product.key}`}
         image={mainPhoto}
       />
+      <JsonLd id="product" data={buildProductSchema(product)} />
+      <JsonLd id="breadcrumb" data={buildBreadcrumbSchema(product)} />
       <div className="grid grid-2">
         <div>
           {mainPhoto ? (

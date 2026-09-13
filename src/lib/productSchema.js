@@ -1,0 +1,112 @@
+// Builder structured data (schema.org) untuk halaman produk.
+//
+// Dipisah dari komponen React supaya logikanya bisa diuji tanpa render (lihat productSchema.test.js)
+// dan supaya aturan "kapan sebuah field boleh muncul" terkumpul di satu tempat.
+//
+// PENTING - kebijakan Google Rich Results yang dipegang di file ini:
+//
+// 1. TIDAK ADA aggregateRating/review palsu. Pixelso belum menyimpan rating per-produk sama
+//    sekali (field-nya tidak ada di API katalog). soldCount BUKAN rating. Mengarang rating =
+//    pelanggaran kebijakan spam Google dan bisa kena manual action yang mencabut seluruh rich
+//    result domain. Kalau nanti rating asli per-produk sudah ada di ERP, baru tambahkan di sini.
+//
+// 2. Harga pakai AggregateOffer + lowPrice, BUKAN Offer dengan price tunggal. Harga Pixelso
+//    dihitung dari ukuran/bahan/finishing (lihat PriceCalculatorForm), jadi baseRate adalah
+//    "harga mulai dari", bukan harga final. Mengklaim price tunggal = harga di Google beda
+//    dengan harga sebenarnya di halaman, itu structured data tidak akurat.
+//
+// 3. Produk tanpa harga (baseRate 0/null, mis. "laser" yang harganya custom) tidak dikasih
+//    offers sama sekali - lebih baik tidak ada data harga daripada mengklaim gratis.
+
+const SITE_URL = 'https://www.cetakpixelso.com';
+const SITE_NAME = 'Pixelso Gemolong';
+
+function absoluteUrl(path) {
+  if (!path) return undefined;
+  return /^https?:\/\//i.test(path) ? path : `${SITE_URL}${path}`;
+}
+
+function stripHtml(html) {
+  return String(html ?? '')
+    .replace(/<(p|li|br|div|h[1-6])[^>]*>/gi, ' ')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Schema Product. Return null kalau produk tidak valid supaya pemanggil bisa skip render.
+export function buildProductSchema(product) {
+  if (!product || !product.key || !product.name) return null;
+
+  const images = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : (product.imageUrl ? [product.imageUrl] : []);
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    url: `${SITE_URL}/produk/${product.key}`,
+    sku: product.key,
+    brand: { '@type': 'Brand', name: SITE_NAME },
+  };
+
+  const description = stripHtml(product.description);
+  if (description) schema.description = description.slice(0, 500);
+
+  const absoluteImages = images.map(absoluteUrl).filter(Boolean);
+  if (absoluteImages.length > 0) schema.image = absoluteImages;
+
+  if (product.category) schema.category = product.category;
+
+  // Harga: hanya kalau baseRate benar-benar ada dan > 0 (lihat catatan 2 & 3 di atas).
+  const baseRate = Number(product.baseRate);
+  if (Number.isFinite(baseRate) && baseRate > 0) {
+    schema.offers = {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'IDR',
+      lowPrice: baseRate,
+      availability: product.active === false
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: SITE_NAME },
+      url: `${SITE_URL}/produk/${product.key}`,
+    };
+  }
+
+  return schema;
+}
+
+// Schema BreadcrumbList: Beranda > Katalog > [Kategori] > Nama Produk.
+// Kategori ditaruh sebagai item katalog ter-filter (?kategori=) - itu URL yang memang ada di app,
+// jadi breadcrumb-nya mengarah ke halaman yang benar-benar bisa dibuka, bukan URL karangan.
+export function buildBreadcrumbSchema(product) {
+  if (!product || !product.key || !product.name) return null;
+
+  const items = [
+    { name: 'Beranda', item: `${SITE_URL}/` },
+    { name: 'Katalog', item: `${SITE_URL}/katalog` },
+  ];
+
+  if (product.category) {
+    items.push({
+      name: product.category,
+      item: `${SITE_URL}/katalog?kategori=${encodeURIComponent(product.category)}`,
+    });
+  }
+
+  items.push({ name: product.name, item: `${SITE_URL}/produk/${product.key}` });
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: entry.name,
+      item: entry.item,
+    })),
+  };
+}
+
+export const __test__ = { absoluteUrl, stripHtml, SITE_URL, SITE_NAME };
