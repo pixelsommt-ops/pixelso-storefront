@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { calculatePrintPrice } from '../lib/calculator';
 import { formatCurrency } from '../lib/format';
+import { buildOrderMessage } from '../lib/orderMessage';
+import { waLink } from '../lib/business';
+import useSiteSettingsStore from '../store/siteSettingsStore';
+import { trackContact } from '../lib/analytics';
 
 const EMPTY_FORM = { width: '', height: '', quantity: 1, needDesign: false };
 
@@ -18,6 +22,7 @@ function buildDefaultSelections(product) {
 export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [selections, setSelections] = useState(() => buildDefaultSelections(product));
+  const business = useSiteSettingsStore((s) => s.settings);
 
   // Reset form & pilihan default tiap ganti produk (ProductDetail tidak remount saat
   // customer pindah dari satu produk ke produk lain lewat link, cuma productKey berubah).
@@ -127,6 +132,25 @@ export default function PriceCalculatorForm({ catalog, product, onAddToCart }) {
       <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={!result.valid}>
         Tambah ke Keranjang
       </button>
+
+      {/* Jalur pesan tanpa perlu daftar akun. Checkout mewajibkan login (ProtectedRoute +
+          authenticateCustomer di backend), dan untuk pengunjung baru itu penghalang terbesar
+          sebelum memesan. Tombol ini melewati checkout sepenuhnya - alur checkout yang sudah
+          jalan tidak disentuh sama sekali, jadi pelanggan yang memang mau punya akun tetap
+          bisa memakainya seperti biasa. */}
+      <a
+        href={waLink(business.whatsapp, buildOrderMessage(product, result, form, catalog.designFee))}
+        target="_blank"
+        rel="noreferrer"
+        className="btn btn-secondary"
+        style={{ width: '100%', marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+        onClick={() => trackContact(`product_form_${product.key}`)}
+      >
+        Pesan lewat WhatsApp
+      </a>
+      <p className="text-muted" style={{ fontSize: '0.78rem', textAlign: 'center', margin: '6px 0 0' }}>
+        Tanpa daftar akun - rincian pesanan terkirim otomatis
+      </p>
     </form>
   );
 }
