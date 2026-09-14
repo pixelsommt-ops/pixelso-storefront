@@ -3,6 +3,42 @@
 Storefront (`cetakpixelso.com`) TIDAK punya skrip deploy otomatis seperti pixelso-erp.
 Deploy dilakukan manual: build lokal, kirim tarball, tukar folder `dist`.
 
+## Prerender (WAJIB untuk SEO)
+
+Storefront ini SPA client-side murni: HTML mentah yang dikirim ke crawler punya
+`<body>` kosong, dan `index.html` memuat canonical statis `https://www.cetakpixelso.com/`.
+Akibatnya **semua** halaman produk & blog mengaku duplikat homepage, dan Google
+tidak melihat H1/harga/teks/internal link sama sekali.
+
+`scripts/prerender.mjs` menjalankan Chrome sungguhan untuk tiap rute di
+`dist/sitemap.xml`, menunggu React selesai render, lalu menyimpan hasilnya
+sebagai `dist/<rute>/index.html`. Nginx sudah memakai `try_files $uri $uri/ /index.html`,
+jadi file itu otomatis disajikan lebih dulu — **tidak perlu ubah konfigurasi nginx.**
+
+Pengguna biasa tetap dapat SPA penuh (React hydrate di atas HTML tersebut).
+
+Dua hal yang dijaga script ini:
+
+- **`/` sengaja TIDAK diprerender.** `dist/index.html` merangkap fallback SPA
+  untuk rute yang tidak diprerender (keranjang, checkout, login, profil). Kalau
+  diisi HTML homepage, rute-rute itu akan berkedip menampilkan isi homepage dulu.
+- **Halaman privat tidak diprerender** (`SKIP` di script): keranjang, checkout,
+  pesanan, login, daftar, lupa/reset password, profil.
+
+Butuh Chrome sistem (`/usr/bin/google-chrome`) + `puppeteer-core` (devDependency).
+Sengaja bukan paket `puppeteer` penuh supaya tidak mengunduh ~200MB Chromium.
+
+Urutan: `npm run build:seo` = **build → prerender**.
+
+Rute diambil dari **sitemap production**, bukan `dist/sitemap.xml` lokal. Alasannya:
+sitemap production dihasilkan ulang tiap 6 jam dari data LIVE, sedangkan
+`dist/sitemap.xml` hasil build hanya salinan `public/sitemap.xml` di repo yang
+mudah basi — memakainya berarti produk/artikel baru tidak ikut diprerender tanpa
+peringatan. Script juga tidak butuh backend lokal (port 4010) menyala.
+
+Kalau jaringan mati, script otomatis jatuh ke `dist/sitemap.xml` dan menandai
+sumbernya "LOKAL - bisa basi" di output.
+
 ## JEBAKAN: deploy menimpa sitemap.xml
 
 `sitemap.xml` di production **bukan** file statis hasil build. File itu dihasilkan ulang
@@ -25,11 +61,19 @@ timer dipicu manual.
 ```bash
 cd ~/projects/pixelso-storefront
 
-# 1. Build (butuh .env berisi ID tracking - lihat catatan di bawah)
-npm run lint && npm run build
+# 1. Build + sitemap + prerender (butuh .env berisi ID tracking - lihat catatan di bawah)
+npm run lint && npm run build:seo
 
 # 2. Pastikan placeholder env sudah tergantikan (harus 0)
 grep -c "%VITE_" dist/index.html
+
+# 2b. Pastikan halaman prerender ada & shell SPA tidak terkontaminasi
+find dist -name index.html | wc -l          # harus ~31 (1 shell + 30 prerender)
+node -e "const f=require('fs').readFileSync('dist/index.html','utf8');
+  const m=f.match(/<body[^>]*>([\s\S]*?)<\/body>/);
+  const c=m?m[1].replace(/<[^>]*>/g,'').trim().length:0;
+  if(c>100){console.error('GAGAL: dist/index.html terkontaminasi isi homepage');process.exit(1)}
+  console.log('shell SPA OK')"
 
 # 3. Kirim
 tar -czf /tmp/dist.tgz -C dist .
