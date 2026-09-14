@@ -10,7 +10,8 @@ import SubNav from '../components/SubNav';
 import RichText from '../components/RichText';
 import MobileBottomNav from '../components/MobileBottomNav';
 import { CartIcon } from '../components/BottomNavIcons';
-import { AddressIcon, InstagramIcon, TiktokIcon, YoutubeIcon, WhatsappIcon, ShopeeIcon } from '../components/SocialIcons';
+import { AddressIcon, InstagramIcon, TiktokIcon, YoutubeIcon, WhatsappIcon, ShopeeIcon, FacebookIcon } from '../components/SocialIcons';
+import { facebookUrl } from '../lib/socialUrl';
 
 export default function StorefrontLayout() {
   const customer = useAuthStore((s) => s.customer);
@@ -120,6 +121,18 @@ export default function StorefrontLayout() {
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
                   >
                     <InstagramIcon /> @{business.instagram}
+                  </a>
+                </p>
+              )}
+              {facebookUrl(business.facebook) && (
+                <p>
+                  <a
+                    href={facebookUrl(business.facebook)}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  >
+                    <FacebookIcon /> Facebook
                   </a>
                 </p>
               )}
