@@ -9,7 +9,9 @@ const BASE_ALLOWED_TAGS = ['b', 'strong', 'i', 'em', 'u', 's', 'strike', 'p', 'b
 // BLOG_ALLOWED_TAGS di sanitizeBlogContentHtml (htmlSanitize.js). Aman melebarkan ALLOWED_ATTR di
 // sini karena src iframe/img SUDAH divalidasi ketat di backend sebelum tersimpan (domain
 // whitelist utk iframe, /uploads/ atau https:// utk img) - lapis ini cuma jaga struktur tag.
-const BLOG_ALLOWED_TAGS = [...BASE_ALLOWED_TAGS, 'img', 'iframe', 'div', 'a'];
+// h2/h3 khusus artikel blog - harus sama dengan BLOG_ALLOWED_TAGS di backend. h1 sengaja tidak
+// diizinkan: judul artikel sudah dirender sebagai <h1> di BlogDetail.jsx.
+const BLOG_ALLOWED_TAGS = [...BASE_ALLOWED_TAGS, 'img', 'iframe', 'div', 'a', 'h2', 'h3'];
 const BLOG_ALLOWED_ATTR = ['src', 'alt', 'loading', 'title', 'allow', 'allowfullscreen', 'referrerpolicy', 'class', 'href', 'target', 'rel'];
 
 export default function RichText({ html, className, style, fallback, variant = 'default' }) {

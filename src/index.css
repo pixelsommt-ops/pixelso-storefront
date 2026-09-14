@@ -716,6 +716,27 @@ textarea:focus {
   margin: 1rem 0;
 }
 
+/* Heading di dalam isi artikel (2026-09-14) - penulis bisa memakai H2/H3 lewat editor ERP.
+   Ukurannya sengaja di bawah <h1> judul artikel supaya hierarkinya terbaca jelas, dan jarak
+   atas lebih besar daripada jarak bawah supaya tiap bagian terlihat menyatu dengan isinya. */
+.blog-post-body h2 {
+  font-size: 1.35rem;
+  line-height: 1.3;
+  margin: 2rem 0 0.6rem;
+}
+
+.blog-post-body h3 {
+  font-size: 1.1rem;
+  line-height: 1.35;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* Heading pertama tidak perlu jarak atas - sudah ada jarak dari elemen di atasnya. */
+.blog-post-body > h2:first-child,
+.blog-post-body > h3:first-child {
+  margin-top: 0;
+}
+
 .hero-fallback-card {
   position: relative;
   z-index: 1;
