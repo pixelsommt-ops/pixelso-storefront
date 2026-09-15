@@ -86,8 +86,24 @@ Diverifikasi dist + prerender tetap utuh setelah pembersihan.
    search.google.com/search-console, atau siapkan service account dulu.
 
 ### Prioritas menengah
-3. **Halaman `/portfolio/`** — belum ada sama sekali. Strategi menyebutnya
-   "mesin SEO" utama. Pola URL: `/portfolio/banner-kokurikuler-sekolah-sragen/`
+3. **Halaman `/portfolio/` — SISTEMNYA SUDAH JADI, tinggal diisi.**
+   Commit `a0206ab`. Rute `/portfolio` + `/portfolio/:slug` sudah ada,
+   lengkap dengan schema CreativeWork + BreadcrumbList + ItemList,
+   CTA ke halaman produk, dan integrasi sitemap + prerender.
+
+   **YANG DIBUTUHKAN DARI PEMILIK:** data pekerjaan NYATA. Isi
+   `src/data/portfolio.js` — templatnya sudah ada di komentar file itu.
+   Per pekerjaan perlu: judul, klien (opsional), lokasi, ukuran, bahan,
+   finishing, jumlah, lama pengerjaan, kebutuhan, proses, hasil, dan
+   foto hasil nyata (nama file deskriptif, bukan IMG_1234.jpg).
+
+   Sengaja TIDAK diisi data karangan. Portofolio bekerja sebagai bukti
+   sosial; mengarang pekerjaan menipu calon pelanggan.
+
+   Selama masih kosong: URL-nya tidak masuk sitemap dan link navigasinya
+   disembunyikan, jadi aman dideploy kapan saja. Setelah diisi, cukup
+   `npm run build:seo` + deploy — sisanya otomatis.
+
 4. **5 landing page yang belum ada**: sablon kaos custom, jersey custom,
    cetak undangan, cetak kemasan, neonbox reklame.
    (Sudah ada 20 halaman produk; skor target strategi 7/13.)
