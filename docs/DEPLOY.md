@@ -39,6 +39,36 @@ peringatan. Script juga tidak butuh backend lokal (port 4010) menyala.
 Kalau jaringan mati, script otomatis jatuh ke `dist/sitemap.xml` dan menandai
 sumbernya "LOKAL - bisa basi" di output.
 
+### Prerender bisa BASI — ini jebakan yang mudah terlewat
+
+Prerender adalah snapshot saat build. Sitemap production diperbarui tiap 6 jam
+dari data LIVE. Jadi begitu ada **produk atau artikel baru terbit**, URL-nya
+langsung masuk sitemap dan diberikan ke Google — padahal belum pernah diprerender.
+
+URL yang belum diprerender jatuh ke fallback SPA `dist/index.html`, artinya
+kembali persis ke kondisi rusak sebelum perbaikan: canonical ke homepage,
+`<body>` kosong, title generik. **Tanpa error, tanpa peringatan.**
+
+Terbukti: URL produk yang belum diprerender menerima 8.681 b (shell SPA) dengan
+canonical `https://www.cetakpixelso.com/`, sedangkan yang sudah diprerender
+menerima 50.112 b dengan canonical benar.
+
+Karena itu: **setiap kali menerbitkan produk atau artikel baru, WAJIB
+`npm run build:seo` + deploy ulang.** Menerbitkan lewat ERP saja tidak cukup.
+
+Pemantauan otomatis:
+
+```bash
+node scripts/check-prerender-drift.mjs
+# exit 0 = semua sehat, exit 1 = ada halaman yang perlu diprerender ulang
+```
+
+Sudah terpasang sebagai cron mingguan (Senin 09:00, job `b7d6139481ba`).
+Script diam kalau semua sehat, hanya bersuara kalau ada yang basi.
+
+Batasan: VPS tidak punya Chrome dan RAM-nya 2 GB, jadi prerender **tidak bisa**
+dijalankan di server. Harus dari mesin lokal lalu deploy.
+
 ## JEBAKAN: deploy menimpa sitemap.xml
 
 `sitemap.xml` di production **bukan** file statis hasil build. File itu dihasilkan ulang
