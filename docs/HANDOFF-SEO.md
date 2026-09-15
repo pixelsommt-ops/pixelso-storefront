@@ -86,23 +86,30 @@ Diverifikasi dist + prerender tetap utuh setelah pembersihan.
    search.google.com/search-console, atau siapkan service account dulu.
 
 ### Prioritas menengah
-3. **Halaman `/portfolio/` — SISTEMNYA SUDAH JADI, tinggal diisi.**
-   Commit `a0206ab`. Rute `/portfolio` + `/portfolio/:slug` sudah ada,
-   lengkap dengan schema CreativeWork + BreadcrumbList + ItemList,
-   CTA ke halaman produk, dan integrasi sitemap + prerender.
+3. **Halaman `/portfolio/` — SUDAH PINDAH KE ERP (15 Sep 2026).**
 
-   **YANG DIBUTUHKAN DARI PEMILIK:** data pekerjaan NYATA. Isi
-   `src/data/portfolio.js` — templatnya sudah ada di komentar file itu.
-   Per pekerjaan perlu: judul, klien (opsional), lokasi, ukuran, bahan,
-   finishing, jumlah, lama pengerjaan, kebutuhan, proses, hasil, dan
-   foto hasil nyata (nama file deskriptif, bukan IMG_1234.jpg).
+   Rencana lama (isi `src/data/portfolio.js` manual) DIBATALKAN atas
+   permintaan pemilik: file mentah merepotkan saat update, dan tidak ada
+   tempat mencatat persetujuan pelanggan.
 
-   Sengaja TIDAK diisi data karangan. Portofolio bekerja sebagai bukti
-   sosial; mengarang pekerjaan menipu calon pelanggan.
+   Sekarang portofolio diinput karyawan lewat ERP, menu "Portofolio",
+   dengan gerbang izin pelanggan wajib sebelum tayang. Sudah live.
 
-   Selama masih kosong: URL-nya tidak masuk sitemap dan link navigasinya
-   disembunyikan, jadi aman dideploy kapan saja. Setelah diisi, cukup
-   `npm run build:seo` + deploy — sisanya otomatis.
+   **Yang tersisa (Tahap B):** storefront masih membaca file statis
+   `src/data/portfolio.js`. Perlu diubah agar ambil dari API ERP:
+
+   ```
+   GET /api/storefront/portfolio        daftar (hanya published)
+   GET /api/storefront/portfolio/:slug  detail
+   ```
+
+   Endpoint sudah live & terverifikasi. Langkah lengkap ada di
+   `pixelso-erp/docs/development/HANDOFF-PORTFOLIO.md` bagian TAHAP B.
+
+   Berkas storefront yang perlu disentuh: `src/services/portfolioService.js`
+   (baru), `src/pages/Portfolio.jsx`, `src/pages/PortfolioDetail.jsx`,
+   `src/components/SubNav.jsx`, `scripts/generate-sitemap.mjs`, lalu
+   HAPUS `src/data/portfolio.js`.
 
 4. **5 landing page yang belum ada**: sablon kaos custom, jersey custom,
    cetak undangan, cetak kemasan, neonbox reklame.
