@@ -153,6 +153,77 @@ export function buildArticleSchema(post) {
   return schema;
 }
 
+// --- PORTFOLIO -----------------------------------------------------------------------------
+//
+// Schema untuk halaman portofolio (studi kasus pekerjaan nyata).
+//
+// Catatan kebijakan:
+//
+// - Dipakai @type CreativeWork, BUKAN Product. Halaman portofolio menceritakan
+//   pekerjaan yang SUDAH selesai untuk pelanggan tertentu - barang itu tidak
+//   dijual ulang apa adanya. Memberi Product+offers pada studi kasus =
+//   mengklaim ada barang yang bisa dibeli di URL itu, padahal pembelian
+//   terjadi di halaman produk. Tombol CTA-lah yang mengarah ke sana.
+//
+// - TIDAK ada aggregateRating/review, konsisten dengan kebijakan di atas.
+//
+// - `client` hanya dimasukkan kalau memang diisi. Sebagian pelanggan tidak
+//   mau namanya dipublikasikan.
+export function buildPortfolioSchema(item) {
+  if (!item || !item.slug || !item.title) return null;
+
+  const url = `${SITE_URL}/portfolio/${item.slug}`;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: item.title,
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    creator: { '@type': 'Organization', name: SITE_NAME, url: `${SITE_URL}/` },
+  };
+
+  const description = [item.need, item.process, item.result]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  if (description) schema.description = stripHtml(description).slice(0, 500);
+
+  const images = (Array.isArray(item.images) ? item.images : [])
+    .map(absoluteUrl)
+    .filter(Boolean);
+  if (images.length > 0) schema.image = images;
+
+  if (item.publishedAt) schema.datePublished = item.publishedAt;
+  if (item.category) schema.genre = item.category;
+  if (item.material) schema.material = item.material;
+  if (item.location) schema.locationCreated = { '@type': 'Place', name: item.location };
+  if (item.client) schema.sponsor = { '@type': 'Organization', name: item.client };
+
+  return schema;
+}
+
+// Breadcrumb portofolio: Beranda > Portofolio > Judul Pekerjaan.
+export function buildPortfolioBreadcrumbSchema(item) {
+  if (!item || !item.slug || !item.title) return null;
+
+  const items = [
+    { name: 'Beranda', item: `${SITE_URL}/` },
+    { name: 'Portofolio', item: `${SITE_URL}/portfolio` },
+    { name: item.title, item: `${SITE_URL}/portfolio/${item.slug}` },
+  ];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((entry, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: entry.name,
+      item: entry.item,
+    })),
+  };
+}
+
 // Breadcrumb artikel: Beranda > Blog > Judul Artikel.
 export function buildBlogBreadcrumbSchema(post) {
   if (!post || !post.slug || !post.title) return null;

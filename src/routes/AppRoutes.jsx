@@ -19,6 +19,8 @@ const TentangKami = lazy(() => import('../pages/TentangKami'));
 const KebijakanPrivasi = lazy(() => import('../pages/KebijakanPrivasi'));
 const Blog = lazy(() => import('../pages/Blog'));
 const BlogDetail = lazy(() => import('../pages/BlogDetail'));
+const Portfolio = lazy(() => import('../pages/Portfolio'));
+const PortfolioDetail = lazy(() => import('../pages/PortfolioDetail'));
 const ProductDetail = lazy(() => import('../pages/ProductDetail'));
 const Cart = lazy(() => import('../pages/Cart'));
 const Login = lazy(() => import('../pages/Login'));
@@ -44,6 +46,8 @@ export default function AppRoutes() {
           <Route path="/kebijakan-privasi" element={<KebijakanPrivasi />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
           <Route path="/kalkulator-papercut" element={<PapercutCalculator />} />
           <Route path="/produk/:productKey" element={<ProductDetail />} />
           <Route path="/keranjang" element={<Cart />} />

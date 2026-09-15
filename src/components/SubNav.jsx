@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import useCatalogStore from '../store/catalogStore';
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import * as blogService from '../services/blogService';
+import { hasPortfolio } from '../data/portfolio';
 import { waLink } from '../lib/business';
 import { trackContact } from '../lib/analytics';
 import { WhatsappIcon } from './SocialIcons';
@@ -98,6 +99,11 @@ export default function SubNav() {
           <NavLink to="/promo" className="sub-nav-link" onClick={closeCategory}>Promo</NavLink>
           <NavLink to="/jam-layanan" className="sub-nav-link" onClick={closeCategory}>Jam Layanan</NavLink>
           <NavLink to="/tentang-kami" className="sub-nav-link" onClick={closeCategory}>Tentang Kami</NavLink>
+          {/* Portofolio hanya ditautkan kalau sudah ada isinya - menautkan halaman
+              "Segera Hadir" dari semua halaman cuma bikin pengunjung buntu. */}
+          {hasPortfolio() && (
+            <NavLink to="/portfolio" className="sub-nav-link" onClick={closeCategory}>Portofolio</NavLink>
+          )}
           <NavLink to="/blog" className="sub-nav-link" onClick={closeCategory}>
             Blog
             {hasNewBlogPost && <NewBadge />}

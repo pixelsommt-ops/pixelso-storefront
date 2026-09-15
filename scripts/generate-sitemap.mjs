@@ -40,6 +40,30 @@ async function main() {
   const today = new Date().toISOString().slice(0, 10);
   const entries = STATIC_PAGES.map((p) => urlEntry(`${SITE_URL}${p.path}`, today, p.changefreq, p.priority));
 
+  // Portofolio: datanya ada di repo (src/data/portfolio.js), bukan di API.
+  //
+  // PENTING - /portfolio hanya masuk sitemap kalau isinya TIDAK kosong. Halaman
+  // daftar yang cuma berisi "Segera Hadir" adalah halaman tipis; menyerahkannya
+  // ke Google justru sinyal buruk. Begitu ada entri pertama, URL-nya otomatis
+  // ikut tanpa perlu mengubah script ini.
+  let portfolioCount = 0;
+  try {
+    const { PORTFOLIO } = await import('../src/data/portfolio.js');
+    if (Array.isArray(PORTFOLIO) && PORTFOLIO.length > 0) {
+      entries.push(urlEntry(`${SITE_URL}/portfolio`, today, 'weekly', '0.8'));
+      for (const item of PORTFOLIO) {
+        if (!item?.slug) continue;
+        const lastmod = (item.publishedAt || today).slice(0, 10);
+        entries.push(urlEntry(`${SITE_URL}/portfolio/${item.slug}`, lastmod, 'monthly', '0.7'));
+        portfolioCount += 1;
+      }
+    }
+  } catch (err) {
+    // Jangan gagalkan seluruh sitemap hanya karena portofolio bermasalah -
+    // sitemap dipakai systemd timer di server dan kegagalannya tidak terlihat.
+    console.warn('Lewati portofolio:', err.message);
+  }
+
   const [catalogRes, blogRes] = await Promise.all([
     fetch(`${API_BASE}/catalog`).then((r) => r.json()),
     fetch(`${API_BASE}/blog`).then((r) => r.json()),
@@ -61,7 +85,7 @@ async function main() {
 
   const fs = await import('fs/promises');
   await fs.writeFile(OUT_PATH, xml, 'utf-8');
-  console.log(`Sitemap ditulis ke ${OUT_PATH} - ${products.length} produk, ${posts.length} artikel, ${STATIC_PAGES.length} halaman statis (total ${entries.length} URL).`);
+  console.log(`Sitemap ditulis ke ${OUT_PATH} - ${products.length} produk, ${posts.length} artikel, ${portfolioCount} portofolio, ${STATIC_PAGES.length} halaman statis (total ${entries.length} URL).`);
 }
 
 main().catch((err) => {
