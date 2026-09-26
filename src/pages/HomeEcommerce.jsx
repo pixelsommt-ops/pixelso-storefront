@@ -82,6 +82,27 @@ export default function HomeEcommerce({ activeProducts, visibleProducts, sentine
         )}
       </section>
 
+      <section className="section container">
+        <div className="section-head section-head-center">
+          <h2>Layanan Custom</h2>
+          <p className="text-muted section-head-desc">Konsultasikan kebutuhan cetak yang belum tersedia di kalkulator katalog.</p>
+        </div>
+        <div className="kategori-grid">
+          {[
+            ['/sablon-kaos-custom', 'Sablon Kaos Custom'],
+            ['/jersey-custom', 'Jersey Custom'],
+            ['/cetak-undangan', 'Cetak Undangan'],
+            ['/cetak-kemasan', 'Cetak Kemasan UMKM'],
+            ['/neonbox-reklame', 'Neon Box & Reklame'],
+          ].map(([path, label]) => (
+            <Link key={path} to={path} className="kategori-tile">
+              <span>{label}</span>
+              <span className="text-muted" style={{ fontSize: '0.7rem' }}>Lihat layanan</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <ScrollReveal as="section" className="section container">
         <div className="section-head section-head-center">
           <h2>Tentang CetakPixelso</h2>

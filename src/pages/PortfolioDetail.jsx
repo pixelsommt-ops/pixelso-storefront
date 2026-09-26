@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import JsonLd from '../components/JsonLd';
-import { getPortfolioItem } from '../data/portfolio';
+import * as portfolioService from '../services/portfolioService';
 import { buildPortfolioSchema, buildPortfolioBreadcrumbSchema } from '../lib/productSchema';
 import useCatalogStore from '../store/catalogStore';
 
@@ -18,9 +18,23 @@ function Spec({ label, value }) {
   );
 }
 
+// API ERP mengirim needText/processText/resultText (lihat portfolio.service.js#PUBLIC_SELECT),
+// tapi schema builder & markup di bawah pakai need/process/result - dipetakan di satu tempat
+// ini supaya kalau field API berubah lagi, cukup ubah di sini.
+function normalizeItem(raw) {
+  if (!raw) return null;
+  return {
+    ...raw,
+    need: raw.needText,
+    process: raw.processText,
+    result: raw.resultText,
+  };
+}
+
 export default function PortfolioDetail() {
   const { slug } = useParams();
-  const item = getPortfolioItem(slug);
+  const [item, setItem] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   const products = useCatalogStore((s) => s.products);
   const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
@@ -29,7 +43,17 @@ export default function PortfolioDetail() {
     fetchCatalog();
   }, [fetchCatalog]);
 
-  if (!item) {
+  useEffect(() => {
+    setLoaded(false);
+    setItem(null);
+    portfolioService
+      .getItem(slug)
+      .then(({ data }) => setItem(normalizeItem(data)))
+      .catch(() => setItem(null))
+      .finally(() => setLoaded(true));
+  }, [slug]);
+
+  if (loaded && !item) {
     return (
       <div className="section container">
         {/* noindex: URL portofolio yang tidak ada jangan sampai terindeks sebagai halaman kosong */}
@@ -39,6 +63,8 @@ export default function PortfolioDetail() {
       </div>
     );
   }
+
+  if (!item) return null;
 
   const related = products.find((p) => p.key === item.relatedProductKey && p.active);
   const description = [item.need, item.result].filter(Boolean).join(' ');

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Seo from '../components/Seo';
 import JsonLd from '../components/JsonLd';
-import { PORTFOLIO } from '../data/portfolio';
+import * as portfolioService from '../services/portfolioService';
 
 const SITE_URL = 'https://www.cetakpixelso.com';
 
@@ -22,7 +23,17 @@ function buildListSchema(items) {
 }
 
 export default function Portfolio() {
-  const items = PORTFOLIO;
+  const [items, setItems] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    portfolioService
+      .getItems()
+      .then(({ data }) => setItems(data || []))
+      .catch(() => setItems([]))
+      .finally(() => setLoaded(true));
+  }, []);
+
   const listSchema = buildListSchema(items);
 
   return (
@@ -43,7 +54,7 @@ export default function Portfolio() {
         </p>
       </div>
 
-      {items.length === 0 && (
+      {loaded && items.length === 0 && (
         <div className="card" style={{ maxWidth: 640, textAlign: 'center' }}>
           <h3>Segera Hadir</h3>
           <p className="text-muted" style={{ marginBottom: '1rem' }}>

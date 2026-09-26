@@ -21,6 +21,7 @@ const Blog = lazy(() => import('../pages/Blog'));
 const BlogDetail = lazy(() => import('../pages/BlogDetail'));
 const Portfolio = lazy(() => import('../pages/Portfolio'));
 const PortfolioDetail = lazy(() => import('../pages/PortfolioDetail'));
+const ServiceLanding = lazy(() => import('../pages/ServiceLanding'));
 const ProductDetail = lazy(() => import('../pages/ProductDetail'));
 const Cart = lazy(() => import('../pages/Cart'));
 const Login = lazy(() => import('../pages/Login'));
@@ -50,6 +51,9 @@ export default function AppRoutes() {
           <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
           <Route path="/kalkulator-papercut" element={<PapercutCalculator />} />
           <Route path="/produk/:productKey" element={<ProductDetail />} />
+          {/* Lima landing page SEO layanan berbagi satu komponen. Route satu-segmen ini ditaruh
+              setelah semua route statis; React Router memberi route statis ranking lebih tinggi. */}
+          <Route path="/:landingSlug" element={<ServiceLanding />} />
           <Route path="/keranjang" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/daftar" element={<Register />} />

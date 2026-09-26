@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import useCatalogStore from '../store/catalogStore';
 import useSiteSettingsStore from '../store/siteSettingsStore';
 import * as blogService from '../services/blogService';
-import { hasPortfolio } from '../data/portfolio';
+import * as portfolioService from '../services/portfolioService';
 import { waLink } from '../lib/business';
 import { trackContact } from '../lib/analytics';
 import { WhatsappIcon } from './SocialIcons';
@@ -28,6 +28,7 @@ export default function SubNav() {
   const business = useSiteSettingsStore((s) => s.settings);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [blogPosts, setBlogPosts] = useState([]);
+  const [portfolioCount, setPortfolioCount] = useState(0);
   const location = useLocation();
 
   useEffect(() => {
@@ -36,6 +37,13 @@ export default function SubNav() {
 
   useEffect(() => {
     blogService.getPosts().then(({ data }) => setBlogPosts(data || [])).catch(() => setBlogPosts([]));
+  }, []);
+
+  useEffect(() => {
+    portfolioService
+      .getItems()
+      .then(({ data }) => setPortfolioCount((data || []).length))
+      .catch(() => setPortfolioCount(0));
   }, []);
 
   const hasNewProduct = products.some((p) => p.active && isRecent(p.createdAt));
@@ -101,7 +109,7 @@ export default function SubNav() {
           <NavLink to="/tentang-kami" className="sub-nav-link" onClick={closeCategory}>Tentang Kami</NavLink>
           {/* Portofolio hanya ditautkan kalau sudah ada isinya - menautkan halaman
               "Segera Hadir" dari semua halaman cuma bikin pengunjung buntu. */}
-          {hasPortfolio() && (
+          {portfolioCount > 0 && (
             <NavLink to="/portfolio" className="sub-nav-link" onClick={closeCategory}>Portofolio</NavLink>
           )}
           <NavLink to="/blog" className="sub-nav-link" onClick={closeCategory}>
