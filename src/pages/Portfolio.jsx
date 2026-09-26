@@ -25,12 +25,17 @@ function buildListSchema(items) {
 export default function Portfolio() {
   const [items, setItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
+    setLoadError(false);
     portfolioService
       .getItems()
       .then(({ data }) => setItems(data || []))
-      .catch(() => setItems([]))
+      .catch(() => {
+        setItems([]);
+        setLoadError(true);
+      })
       .finally(() => setLoaded(true));
   }, []);
 
@@ -54,7 +59,17 @@ export default function Portfolio() {
         </p>
       </div>
 
-      {loaded && items.length === 0 && (
+      {!loaded && (
+        <p className="text-muted" role="status">Memuat portofolio...</p>
+      )}
+
+      {loaded && loadError && (
+        <div className="alert alert-error" role="alert">
+          Portofolio belum dapat dimuat karena layanan sedang bermasalah. Silakan coba lagi beberapa saat.
+        </div>
+      )}
+
+      {loaded && !loadError && items.length === 0 && (
         <div className="card" style={{ maxWidth: 640, textAlign: 'center' }}>
           <h3>Segera Hadir</h3>
           <p className="text-muted" style={{ marginBottom: '1rem' }}>
@@ -65,7 +80,7 @@ export default function Portfolio() {
         </div>
       )}
 
-      {items.length > 0 && (
+      {!loadError && items.length > 0 && (
         <div className="grid grid-4 product-grid">
           {items.map((item) => (
             <Link

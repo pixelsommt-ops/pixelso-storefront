@@ -3,6 +3,12 @@ import { Link, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import JsonLd from '../components/JsonLd';
 import * as portfolioService from '../services/portfolioService';
+import {
+  classifyPortfolioError,
+  classifyPortfolioPayload,
+  createRequestGuard,
+  isPortfolioResultCurrent,
+} from '../lib/portfolioError';
 import { buildPortfolioSchema, buildPortfolioBreadcrumbSchema } from '../lib/productSchema';
 import useCatalogStore from '../store/catalogStore';
 
@@ -35,6 +41,8 @@ export default function PortfolioDetail() {
   const { slug } = useParams();
   const [item, setItem] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(null);
+  const [resolvedSlug, setResolvedSlug] = useState(null);
 
   const products = useCatalogStore((s) => s.products);
   const fetchCatalog = useCatalogStore((s) => s.fetchCatalog);
@@ -44,19 +52,50 @@ export default function PortfolioDetail() {
   }, [fetchCatalog]);
 
   useEffect(() => {
+    const guard = createRequestGuard();
     setLoaded(false);
     setItem(null);
+    setLoadError(null);
     portfolioService
       .getItem(slug)
-      .then(({ data }) => setItem(normalizeItem(data)))
-      .catch(() => setItem(null))
-      .finally(() => setLoaded(true));
+      .then(({ data }) => {
+        if (!guard.isActive()) return;
+        if (classifyPortfolioPayload(data) !== 'ready') {
+          setLoadError('unavailable');
+          setResolvedSlug(slug);
+          return;
+        }
+        setItem(normalizeItem(data));
+        setResolvedSlug(slug);
+      })
+      .catch((error) => {
+        if (!guard.isActive()) return;
+        setItem(null);
+        setLoadError(classifyPortfolioError(error));
+        setResolvedSlug(slug);
+      })
+      .finally(() => {
+        if (guard.isActive()) setLoaded(true);
+      });
+
+    return () => guard.cancel();
   }, [slug]);
 
-  if (loaded && !item) {
+  if (!loaded || !isPortfolioResultCurrent(resolvedSlug, slug)) {
     return (
       <div className="section container">
-        {/* noindex: URL portofolio yang tidak ada jangan sampai terindeks sebagai halaman kosong */}
+        {/* Seo tanpa noindex langsung mengganti canonical/robots milik slug sebelumnya,
+            bahkan sebelum useEffect request baru sempat mereset state. */}
+        <Seo title="Memuat portofolio" path={`/portfolio/${slug}`} />
+        <p className="text-muted" role="status">Memuat portofolio...</p>
+      </div>
+    );
+  }
+
+  if (loadError === 'not-found') {
+    return (
+      <div className="section container">
+        {/* noindex hanya untuk 404 terkonfirmasi, bukan timeout/500/payload malformed. */}
         <Seo title="Portofolio tidak ditemukan" path={`/portfolio/${slug}`} noindex />
         <div className="alert alert-error">Portofolio tidak ditemukan.</div>
         <Link to="/portfolio" className="btn btn-secondary">Kembali ke Portofolio</Link>
@@ -64,7 +103,19 @@ export default function PortfolioDetail() {
     );
   }
 
-  if (!item) return null;
+  if (loadError === 'unavailable' || !item) {
+    return (
+      <div className="section container">
+        <Seo title="Portofolio sementara tidak tersedia" path={`/portfolio/${slug}`} />
+        <div className="alert alert-error" role="alert">
+          Portofolio belum dapat dimuat karena layanan sedang bermasalah. Silakan coba lagi beberapa saat.
+        </div>
+        <button type="button" className="btn btn-secondary" onClick={() => window.location.reload()}>
+          Coba Lagi
+        </button>
+      </div>
+    );
+  }
 
   const related = products.find((p) => p.key === item.relatedProductKey && p.active);
   const description = [item.need, item.result].filter(Boolean).join(' ');

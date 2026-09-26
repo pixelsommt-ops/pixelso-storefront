@@ -10,7 +10,8 @@
     "build:seo": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "lint": "eslint src",
-    "verify:landings": "node scripts/verify-service-landings.mjs"
+    "verify:landings": "node scripts/verify-service-landings.mjs",
+    "verify:portfolio-errors": "node scripts/verify-portfolio-errors.mjs"
   },
   "dependencies": {
     "axios": "^1.7.7",
