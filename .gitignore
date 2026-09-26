@@ -1,3 +1,8 @@
 node_modules
 dist
 .env
+docs/artikel/*.py
+docs/artikel/*.mjs
+docs/artikel/*.sh
+docs/artikel/CONTENT-SIAP-PASTE.txt
+docs/artikel/README-UPLOAD.md
